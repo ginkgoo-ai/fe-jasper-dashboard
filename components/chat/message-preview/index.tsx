@@ -2,7 +2,7 @@
 
 import equal from "fast-deep-equal";
 import { AnimatePresence, motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Bot } from "lucide-react";
 import { memo } from "react";
 import { Markdown } from "@/components/chat/markdown";
 import { PreviewAttachment } from "@/components/chat/preview-attachment";
@@ -37,7 +37,7 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
           {message.role === "assistant" && (
             <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
               <div className="translate-y-px">
-                <Sparkles size={14} />
+                <Bot size={14} />
               </div>
             </div>
           )}
@@ -64,6 +64,7 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
                       data-testid="message-content"
                       className={cn("flex flex-col gap-4", {
                         "bg-primary text-primary-foreground rounded-xl px-3 py-2": message.role === "user",
+                        "text-secondary-foreground rounded-xl bg-[#F3F4F6] px-3 py-2": message.role !== "user",
                       })}
                     >
                       <Markdown>{part.text}</Markdown>

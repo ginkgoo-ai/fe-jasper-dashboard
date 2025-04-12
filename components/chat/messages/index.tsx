@@ -1,5 +1,6 @@
 import equal from "fast-deep-equal";
 import { memo } from "react";
+import { Greeting } from "@/components/chat/greeting";
 import { PreviewMessage } from "@/components/chat/message-preview";
 import { ThinkingMessage } from "@/components/chat/message-thinking";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
@@ -11,12 +12,13 @@ interface MessagesProps {
   messages: any[];
 }
 
-function PureMessages({ chatId, status, messages }: MessagesProps) {
+function PureMessages(props: MessagesProps) {
+  const { chatId, status, messages } = props;
   const [messagesContainerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>();
 
   return (
-    <div ref={messagesContainerRef} className="flex min-w-0 flex-1 flex-col gap-6 overflow-y-scroll pt-4">
-      {/* {messages.length === 0 && <Greeting />} */}
+    <div ref={messagesContainerRef} className="flex flex-1 h-0 flex-col gap-[1.5rem] overflow-y-scroll pt-[1.5rem]">
+      {messages.length === 0 && <Greeting chatId={chatId} />}
 
       {messages.map((message, index) => (
         <PreviewMessage key={`preview-${index}`} chatId={chatId} message={message} />

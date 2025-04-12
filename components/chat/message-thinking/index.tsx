@@ -2,7 +2,7 @@
 
 import cx from "classnames";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Bot } from "lucide-react";
 
 export const ThinkingMessage = () => {
   const role = "assistant";
@@ -24,11 +24,11 @@ export const ThinkingMessage = () => {
         )}
       >
         <div className="ring-border flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
-          <Sparkles size={14} />
+          <Bot size={14} />
         </div>
 
         <div className="flex w-full flex-col gap-2">
-          <div className="text-muted-foreground flex flex-col gap-4 mt-[0.25rem]">Hmm...</div>
+          <div className="text-muted-foreground mt-[0.25rem] flex flex-col gap-4">Hmm...</div>
         </div>
       </div>
     </motion.div>
