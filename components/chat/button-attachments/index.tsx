@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
-import { PaperclipIcon } from "@/components/ui/icon";
 import { ChatStatus } from "@/types/chat";
+import { Paperclip } from "lucide-react";
 
 interface ButtonAttachmentsProps {
   fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
@@ -22,7 +22,7 @@ function PureButtonAttachments(props: ButtonAttachmentsProps) {
       disabled={status !== ChatStatus.READY}
       variant="ghost"
     >
-      <PaperclipIcon size={14} />
+      <Paperclip size={14} />
     </Button>
   );
 }

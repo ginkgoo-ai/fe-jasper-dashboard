@@ -1,4 +1,4 @@
-import { LoaderIcon } from "@/components/ui/icon";
+import { Loader } from "lucide-react";
 
 export const PreviewAttachment = ({ attachment, isUploading = false }: { attachment: any; isUploading?: boolean }) => {
   const { name, url, contentType } = attachment;
@@ -20,7 +20,7 @@ export const PreviewAttachment = ({ attachment, isUploading = false }: { attachm
 
         {isUploading && (
           <div data-testid="input-attachment-loader" className="absolute animate-spin text-zinc-500">
-            <LoaderIcon />
+            <Loader />
           </div>
         )}
       </div>

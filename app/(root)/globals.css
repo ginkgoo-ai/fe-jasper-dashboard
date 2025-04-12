@@ -120,3 +120,51 @@
     @apply bg-background text-foreground;
   }
 }
+
+html {
+  font-size: 16px;
+  --width-max: 120rem;
+  --width-padding: 10.15625%; /* 10.15625vw */ /* 12.1875rem */
+}
+
+@media screen and (min-width: 375px) {
+  html {
+    --width-padding: 6.15625%;
+  }
+}
+
+@media screen and (min-width: 640px) {
+  html {
+    --width-padding: 7.15625%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  html {
+    --width-padding: 8.15625%;
+  }
+}
+
+@media screen and (min-width: 896px) {
+  html {
+    --width-padding: 8.15625%;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  html {
+    --width-padding: 9.15625%;
+  }
+}
+
+@media screen and (min-width: 1536px) {
+  html {
+    --width-padding: 10.15625%;
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  html {
+    --width-padding: 10.15625%;
+  }
+}

@@ -2,10 +2,10 @@
 
 import equal from "fast-deep-equal";
 import { AnimatePresence, motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import { memo } from "react";
 import { Markdown } from "@/components/chat/markdown";
 import { PreviewAttachment } from "@/components/chat/preview-attachment";
-import { SparklesIcon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 
 interface MessagePreviewProps {
@@ -23,7 +23,7 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
     <AnimatePresence>
       <motion.div
         data-testid={`message-${message.role}`}
-        className="group/message mx-auto w-full max-w-3xl px-4"
+        className="group/message mx-auto w-full"
         initial={{ y: 5, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         data-role={message.role}
@@ -37,7 +37,7 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
           {message.role === "assistant" && (
             <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
               <div className="translate-y-px">
-                <SparklesIcon size={14} />
+                <Sparkles size={14} />
               </div>
             </div>
           )}
@@ -58,6 +58,8 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
               if (type === "text") {
                 return (
                   <div key={key} className="flex flex-row items-start gap-2">
+                    {message.role === "user" && <div className="flex-1"></div>}
+
                     <div
                       data-testid="message-content"
                       className={cn("flex flex-col gap-4", {

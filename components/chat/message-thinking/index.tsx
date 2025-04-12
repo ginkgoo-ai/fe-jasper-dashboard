@@ -2,7 +2,7 @@
 
 import cx from "classnames";
 import { motion } from "framer-motion";
-import { SparklesIcon } from "@/components/ui/icon";
+import { Sparkles } from "lucide-react";
 
 export const ThinkingMessage = () => {
   const role = "assistant";
@@ -10,7 +10,7 @@ export const ThinkingMessage = () => {
   return (
     <motion.div
       data-testid="message-assistant-loading"
-      className="group/message mx-auto w-full max-w-3xl px-4 "
+      className="group/message mx-auto w-full"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1, transition: { delay: 1 } }}
       data-role={role}
@@ -24,11 +24,11 @@ export const ThinkingMessage = () => {
         )}
       >
         <div className="ring-border flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
-          <SparklesIcon size={14} />
+          <Sparkles size={14} />
         </div>
 
         <div className="flex w-full flex-col gap-2">
-          <div className="text-muted-foreground flex flex-col gap-4">Hmm...</div>
+          <div className="text-muted-foreground flex flex-col gap-4 mt-[0.25rem]">Hmm...</div>
         </div>
       </div>
     </motion.div>

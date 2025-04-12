@@ -15,10 +15,10 @@ interface ChatProps {
 }
 
 export function Chat(props: ChatProps) {
-  const { chatId = generateUUID(), initialMessages = [] } = props;
+  const { chatId = "chat-id-1", initialMessages = [] } = props;
 
   const [multimodalValue, setMultimodalValue] = useState("");
-  const [status, setStatus] = useState<ChatStatus>(ChatStatus.IDLE);
+  const [status, setStatus] = useState<ChatStatus>(ChatStatus.READY);
   const [messages, setMessages] = useState<Array<any>>(initialMessages);
   const [attachments, setAttachments] = useState<Array<any>>([]);
 
@@ -27,15 +27,21 @@ export function Chat(props: ChatProps) {
   };
 
   const handleMultimodalSubmit = () => {
-    console.log("handleMultimodalSubmit", multimodalValue);
     setMultimodalValue("");
-    setMessages([...messages, { role: "user", content: multimodalValue }]);
+    setMessages([
+      ...messages,
+      {
+        id: generateUUID(),
+        role: "user",
+        parts: [{ type: "text", text: multimodalValue }],
+        experimental_attachments: attachments.length > 0 ? attachments : undefined,
+      },
+    ]);
     setStatus(ChatStatus.SUBMITTED);
   };
 
   const handleMultimodalStop = () => {
-    console.log("handleMultimodalStop");
-    setStatus(ChatStatus.IDLE);
+    setStatus(ChatStatus.READY);
   };
 
   const handleAttachmentsChange = (attachments: Array<any>) => {
@@ -43,26 +49,23 @@ export function Chat(props: ChatProps) {
   };
 
   return (
-    <>
-      <div className="bg-background flex h-full w-full flex-col">
-        <div className="flex flex-1 flex-col"></div>
-
-        <Messages chatId={chatId} status={status} messages={messages} />
-
-        <form className="bg-background mx-auto flex w-full px-4 pb-4 md:pb-6">
-          <MultimodalInput
-            chatId={chatId}
-            value={multimodalValue}
-            status={status}
-            attachments={attachments}
-            messages={messages}
-            onInput={handleMultimodalInput}
-            onSubmit={handleMultimodalSubmit}
-            onStop={handleMultimodalStop}
-            onAttachmentsChange={handleAttachmentsChange}
-          />
-        </form>
-      </div>
-    </>
+    <div className="bg-background flex h-full w-full flex-col">
+      {/* Message List */}
+      <Messages chatId={chatId} status={status} messages={messages} />
+      {/* Input Form */}
+      <form className="bg-background mx-auto flex w-full pb-4 md:pb-6">
+        <MultimodalInput
+          chatId={chatId}
+          value={multimodalValue}
+          status={status}
+          attachments={attachments}
+          messages={messages}
+          onInput={handleMultimodalInput}
+          onSubmit={handleMultimodalSubmit}
+          onStop={handleMultimodalStop}
+          onAttachmentsChange={handleAttachmentsChange}
+        />
+      </form>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowUpIcon } from "@/components/ui/icon";
+import { ArrowUp } from "lucide-react";
+
 
 interface ButtonSendProps {
   onSubmitForm: () => void;
@@ -21,7 +22,7 @@ function PureButtonSend(props: ButtonSendProps) {
       }}
       disabled={value.length === 0 || uploadQueue.length > 0}
     >
-      <ArrowUpIcon size={14} />
+      <ArrowUp size={14} />
     </Button>
   );
 }
