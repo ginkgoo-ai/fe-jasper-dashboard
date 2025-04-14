@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon",
-    "build": "next build && tsc --project tsconfig.server.json",
-    "start": "cross-env NODE_ENV=production node dist/server.js",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
@@ -39,7 +39,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
-    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
     "nodemon": "^2.0.20",
