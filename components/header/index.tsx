@@ -44,15 +44,15 @@ const User = () => {
 
   return (
     <DropdownMenu onOpenChange={handleOpenChange}>
-      <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-background">
+      <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-background focus-within:outline-0 lg:focus-within:outline-1">
         <Avatar className="size-6">
           <AvatarImage src={userInfo?.picture ?? defaultAvatar} />
           <AvatarFallback>{userInfo?.fullname?.charAt(0)}</AvatarFallback>
         </Avatar>
-        <span className="text-sm">{userInfo ? userInfo.fullname : ''}</span>
+        <span className="text-sm hidden lg:inline">{userInfo ? userInfo.fullname : ''}</span>
         <ChevronDown
           size={16}
-          className={cn('transition-transform', isOpen ? 'rotate-180' : '')}
+          className={cn('transition-transform hidden lg:inline', isOpen ? 'rotate-180' : '')}
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" sideOffset={4} align="end">
@@ -112,7 +112,7 @@ const Header = (props: { className?: string }) => {
       <div className="flex items-center gap-4">
         <Link href="/" className="flex flex-[0_0_auto] flex-row items-center space-x-[1rem]">
           <Image className="!h-[1.5rem] !w-[1.5rem] dark:invert" src="/logo.svg" alt="logo" width={0} height={0} priority />
-          <span className="text-base">{GlobalManager.siteName}</span>
+          <span className="text-base hidden lg:inline">{GlobalManager.siteName}</span>
         </Link>
       </div>
       <div className="flex items-center gap-4">
