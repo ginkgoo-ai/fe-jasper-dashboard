@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  hostname: "local.slatecast.dev",
+const isDevelopment = process.env.NODE_ENV === 'development';
 
+const nextConfig: NextConfig = {
+  ...(isDevelopment && { hostname: "local.slatecast.dev" }),
   async rewrites() {
     return [
       {
