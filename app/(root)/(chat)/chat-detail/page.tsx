@@ -30,7 +30,7 @@ export default function ChatDetailPage() {
   }, []);
 
   return (
-    <div className="flex h-0 w-full flex-1 flex-col">
+    <div className="box-border flex h-0 w-full flex-1 flex-col pt-16">
       <Chat initialMessages={initialMessages} />
     </div>
   );
