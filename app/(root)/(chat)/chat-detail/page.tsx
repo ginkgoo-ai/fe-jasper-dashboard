@@ -3,18 +3,19 @@
 import { useEffect, useState } from "react";
 import { Chat } from "@/components/chat";
 import { ChatMessage } from "@/types/chat";
-import {
-  mockMessageAssistantLongText,
-  mockMessageAssistantTextOnly,
-  mockMessageAssistantWithAttachments,
-  mockMessageAssistantWithTable,
-  mockMessageUserTextOnly,
-  mockMessageUserWithAttachments,
-  mockMessageUserWithTable,
-} from "./mock";
+
+// import {
+//   mockMessageAssistantLongText,
+//   mockMessageAssistantTextOnly,
+//   mockMessageAssistantWithAttachments,
+//   mockMessageAssistantWithTable,
+//   mockMessageUserTextOnly,
+//   mockMessageUserWithAttachments,
+//   mockMessageUserWithTable,
+// } from "./mock";
 
 export default function ChatDetailPage() {
-  const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
+  const [initialMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
     // const mockMessages: ChatMessage[] = [

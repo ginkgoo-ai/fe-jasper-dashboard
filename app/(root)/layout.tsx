@@ -3,7 +3,6 @@
 import { Toaster } from "sonner";
 import { ThemeProvider } from "next-themes";
 import Header from "@/components/header";
-import GlobalManager from "@/customManager/GlobalManager";
 import useRequest from "@/hooks/useRequest";
 import { getUserInfo } from "@/service/api";
 import { useUserStore } from "@/store";

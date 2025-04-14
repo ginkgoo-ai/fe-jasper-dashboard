@@ -53,7 +53,7 @@ const User = () => {
 
   useEffect(() => {
     setTheme(_theme);
-  }, [_theme]);
+  }, [setTheme, _theme]);
 
   return (
     <DropdownMenu onOpenChange={handleOpenChange}>

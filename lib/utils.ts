@@ -144,7 +144,7 @@ export const fetchEventSource = (params: FetchStreamParams) => {
         onError(new Error("EventSource connection error"));
       }
       eventSource?.close();
-      onComplete && onComplete();
+      onComplete?.();
     };
 
     // Return cancel function
@@ -152,7 +152,7 @@ export const fetchEventSource = (params: FetchStreamParams) => {
       if (eventSource) {
         eventSource.close();
         console.log("EventSource connection closed");
-        onComplete && onComplete();
+        onComplete?.();
       }
     };
   } catch (error) {
