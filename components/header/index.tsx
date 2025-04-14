@@ -1,14 +1,14 @@
 "use client";
 
-import GlobalManager from "@/customManager/GlobalManager";
 import { Menu, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import GlobalManager from "@/customManager/GlobalManager";
 
 const Header = () => {
   return (
-    <header className="flex-0 border-b border-solid border-gray-200 bg-white">
-      <div className="mx-auto h-[4.5rem] max-w-[var(--width-max)] px-[var(--width-padding)]">
+    <header className="flex-0 flex flex-col items-center border-b border-solid border-gray-200 bg-white">
+      <div className="h-[4.5rem] w-full max-w-[var(--width-max)] px-[var(--width-padding)]">
         <div className="relative hidden h-full items-center justify-between md:flex">
           {/* Logo */}
           <Link href="/" className="flex flex-[0_0_auto] flex-row items-center space-x-[1rem]">
