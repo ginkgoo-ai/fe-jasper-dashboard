@@ -1,6 +1,5 @@
 "use client";
 
-import cx from "classnames";
 // import { SuggestedActions } from './suggested-actions';
 import equal from "fast-deep-equal";
 import { toast } from "sonner";
@@ -12,34 +11,23 @@ import { ButtonSend } from "@/components/chat/button-send";
 import { ButtonStop } from "@/components/chat/button-stop";
 import { PreviewAttachment } from "@/components/chat/preview-attachment";
 import { Textarea } from "@/components/ui/textarea";
-import { ChatStatus } from "@/types/chat";
+import { cn } from "@/lib/utils";
+import { ChatMessageAttachment, ChatStatus } from "@/types/chat";
 
 interface MultimodalInputProps {
   chatId: string;
   value: string;
   status: ChatStatus;
-  attachments: Array<any>;
-  messages: Array<any>;
+  attachments: Array<ChatMessageAttachment>;
   className?: string;
   onInput: (value: string) => void;
-  onSubmit: ({ value, attachments }: { value: string; attachments: Array<any> }) => void;
+  onSubmit: ({ value, attachments }: { value: string; attachments: Array<ChatMessageAttachment> }) => void;
   onStop: () => void;
-  onAttachmentsChange: (attachments: Array<any>) => void;
+  onAttachmentsChange: (attachments: Array<ChatMessageAttachment>) => void;
 }
 
 function PureMultimodalInput(props: MultimodalInputProps) {
-  const {
-    chatId,
-    value,
-    status,
-    attachments,
-    // messages,
-    className,
-    onInput,
-    onSubmit,
-    onStop,
-    onAttachmentsChange,
-  } = props;
+  const { chatId, value, status, attachments, className, onInput, onSubmit, onStop, onAttachmentsChange } = props;
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -81,9 +69,9 @@ function PureMultimodalInput(props: MultimodalInputProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    setLocalStorageValue(value);
-  }, [value, setLocalStorageValue]);
+  // useEffect(() => {
+  //   setLocalStorageValue(value);
+  // }, [value, setLocalStorageValue]);
 
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onInput(event.target.value);
@@ -197,7 +185,7 @@ function PureMultimodalInput(props: MultimodalInputProps) {
         placeholder="Send a message..."
         value={value}
         onChange={handleInput}
-        className={cx(
+        className={cn(
           "bg-muted max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 !text-base dark:border-zinc-700",
           className
         )}
@@ -221,7 +209,7 @@ function PureMultimodalInput(props: MultimodalInputProps) {
       </div>
 
       <div className="absolute bottom-0 right-0 flex w-fit flex-row justify-end p-2">
-        {status === ChatStatus.SUBMITTED ? (
+        {[ChatStatus.SUBMITTED, ChatStatus.STREAMING].includes(status) ? (
           <ButtonStop onStop={onStop} />
         ) : (
           <ButtonSend value={value} onSubmitForm={handleSubmitForm} uploadQueue={uploadQueue} />

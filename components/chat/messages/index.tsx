@@ -4,12 +4,12 @@ import { Greeting } from "@/components/chat/greeting";
 import { PreviewMessage } from "@/components/chat/message-preview";
 import { ThinkingMessage } from "@/components/chat/message-thinking";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
-import { ChatStatus } from "@/types/chat";
+import { ChatMessage, ChatStatus } from "@/types/chat";
 
 interface MessagesProps {
   chatId: string;
   status: ChatStatus;
-  messages: any[];
+  messages: ChatMessage[];
 }
 
 function PureMessages(props: MessagesProps) {

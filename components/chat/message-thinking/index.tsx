@@ -1,8 +1,8 @@
 "use client";
 
-import cx from "classnames";
 import { motion } from "framer-motion";
 import { Bot } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const ThinkingMessage = () => {
   const role = "assistant";
@@ -10,13 +10,13 @@ export const ThinkingMessage = () => {
   return (
     <motion.div
       data-testid="message-assistant-loading"
-      className="group/message mx-auto w-full"
+      className="group/message mx-auto box-border w-full px-[0.125rem]"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1, transition: { delay: 1 } }}
       data-role={role}
     >
       <div
-        className={cx(
+        className={cn(
           "flex w-full gap-4 rounded-xl group-data-[role=user]/message:ml-auto group-data-[role=user]/message:w-fit group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:px-3 group-data-[role=user]/message:py-2",
           {
             "group-data-[role=user]/message:bg-muted": true,
