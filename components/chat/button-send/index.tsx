@@ -1,7 +1,6 @@
+import { ArrowUp } from "lucide-react";
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowUp } from "lucide-react";
-
 
 interface ButtonSendProps {
   onSubmitForm: () => void;

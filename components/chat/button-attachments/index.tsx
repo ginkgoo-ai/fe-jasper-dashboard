@@ -1,7 +1,7 @@
+import { Paperclip } from "lucide-react";
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { ChatStatus } from "@/types/chat";
-import { Paperclip } from "lucide-react";
 
 interface ButtonAttachmentsProps {
   fileInputRef: React.MutableRefObject<HTMLInputElement | null>;

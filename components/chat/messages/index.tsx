@@ -17,7 +17,7 @@ function PureMessages(props: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>();
 
   return (
-    <div ref={messagesContainerRef} className="flex flex-1 h-0 flex-col gap-[1.5rem] overflow-y-scroll pt-[1.5rem]">
+    <div ref={messagesContainerRef} className="flex h-0 flex-1 flex-col gap-[1.5rem] overflow-y-scroll pt-[1.5rem]">
       {messages.length === 0 && <Greeting chatId={chatId} />}
 
       {messages.map((message, index) => (

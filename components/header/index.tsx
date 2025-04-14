@@ -1,11 +1,14 @@
 "use client";
 
-import GlobalManager from "@/customManager/GlobalManager";
 import { Menu, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import GlobalManager from "@/customManager/GlobalManager";
+import { useUserStore } from "@/store";
 
 const Header = () => {
+  const { userInfo } = useUserStore();
+
   return (
     <header className="flex-0 border-b border-solid border-gray-200 bg-white">
       <div className="mx-auto h-[4.5rem] max-w-[var(--width-max)] px-[var(--width-padding)]">
@@ -19,7 +22,7 @@ const Header = () => {
           {/* User Profile */}
           <div className="box-border flex flex-[0_0_auto] flex-row items-center justify-center space-x-[0.5rem] rounded-[0.5rem] bg-[#F3F4F6] px-[1rem] py-[0.75rem]">
             <User />
-            <span className="text-[1rem] text-[#374151]">Account</span>
+            <span className="text-[1rem] text-[#374151]">{userInfo?.name}</span>
           </div>
         </div>
         <div className="relative flex h-full items-center justify-between md:hidden">
