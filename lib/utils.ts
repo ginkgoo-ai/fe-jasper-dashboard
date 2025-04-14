@@ -44,6 +44,7 @@ export const fetchStream = async (params: FetchStreamParams) => {
     headers = { "Content-Type": "application/json" },
     query = {},
     body,
+    onDealChunk,
     onChunk,
     onComplete,
     onError,
@@ -86,7 +87,7 @@ export const fetchStream = async (params: FetchStreamParams) => {
       }
 
       const chunk = decoder.decode(value, { stream: true });
-      responseText += chunk;
+      responseText += onDealChunk ? onDealChunk(chunk) : chunk;
 
       onChunk(responseText);
 
@@ -95,7 +96,7 @@ export const fetchStream = async (params: FetchStreamParams) => {
 
     readStream().catch((error) => {
       if (error.name === "AbortError") {
-        console.log("流式请求已取消");
+        console.log("Stream request cancelled");
       } else {
         onError(error);
       }
@@ -103,11 +104,66 @@ export const fetchStream = async (params: FetchStreamParams) => {
 
     return cancelFetch;
   } catch (error) {
-    console.error("流式API请求错误:", error);
+    console.error("Stream API request error:", error);
     if (error instanceof Error && error.name !== "AbortError") {
       onError(error);
     }
 
     return cancelFetch;
+  }
+};
+
+export const fetchEventSource = (params: FetchStreamParams) => {
+  const { url = "", query = {}, onDealChunk, onChunk, onComplete, onError } = params;
+
+  const urlWithQuery = router2url(url, query);
+  let eventSource: EventSource | null = null;
+  let responseText = "";
+
+  try {
+    // Create EventSource instance
+    eventSource = new EventSource(urlWithQuery);
+
+    // Handle message event
+    eventSource.onmessage = (event) => {
+      const chunk = event.data;
+      responseText += onDealChunk ? onDealChunk(chunk) : chunk;
+      onChunk(responseText);
+    };
+
+    // Handle connection open event
+    eventSource.onopen = () => {
+      console.log("EventSource connection opened");
+    };
+
+    // Handle error event
+    eventSource.onerror = (error) => {
+      console.log("EventSource onerror:", eventSource);
+      if (eventSource?.readyState === EventSource.CLOSED) {
+        console.error("EventSource error:", error);
+        onError(new Error("EventSource connection error"));
+      }
+      eventSource?.close();
+      onComplete && onComplete();
+    };
+
+    // Return cancel function
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+        console.log("EventSource connection closed");
+        onComplete && onComplete();
+      }
+    };
+  } catch (error) {
+    console.error("Error creating EventSource:", error);
+    if (error instanceof Error) {
+      onError(error);
+    }
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+    };
   }
 };

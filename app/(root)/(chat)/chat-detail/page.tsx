@@ -7,11 +7,9 @@ import {
   mockMessageAssistantLongText,
   mockMessageAssistantTextOnly,
   mockMessageAssistantWithAttachments,
-  mockMessageAssistantWithCode,
   mockMessageAssistantWithTable,
   mockMessageUserTextOnly,
   mockMessageUserWithAttachments,
-  mockMessageUserWithCode,
   mockMessageUserWithTable,
 } from "./mock";
 
@@ -19,18 +17,16 @@ export default function ChatDetailPage() {
   const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
-    const mockMessages: ChatMessage[] = [
-      mockMessageUserTextOnly,
-      mockMessageAssistantTextOnly,
-      mockMessageUserWithTable,
-      mockMessageAssistantWithTable,
-      mockMessageUserWithAttachments,
-      mockMessageAssistantWithAttachments,
-      mockMessageUserWithCode,
-      mockMessageAssistantWithCode,
-      mockMessageAssistantLongText,
-    ];
-    setInitialMessages(mockMessages);
+    // const mockMessages: ChatMessage[] = [
+    //   mockMessageUserTextOnly,
+    //   mockMessageAssistantTextOnly,
+    //   mockMessageUserWithTable,
+    //   mockMessageAssistantWithTable,
+    //   mockMessageUserWithAttachments,
+    //   mockMessageAssistantWithAttachments,
+    //   mockMessageAssistantLongText,
+    // ];
+    // setInitialMessages(mockMessages);
   }, []);
 
   return (

@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Messages } from "@/components/chat/messages";
 import { MultimodalInput } from "@/components/chat/multimodal-input";
 import {
-  fetchStream,
+  fetchEventSource,
   // fetcher,
 } from "@/lib/utils";
 import { ChatMessage, ChatMessageAttachment, ChatStatus } from "@/types/chat";
@@ -50,9 +50,8 @@ export function Chat(props: ChatProps) {
 
     const assistantMessageId = uuidv4();
 
-    fetchStream({
-      url: "http://192.168.31.205:6000/assistant",
-      method: "GET",
+    cancelFetchRef.current = fetchEventSource({
+      url: "http://192.168.31.205:6011/assistant",
       query: {
         message: userInput,
         chatId: chatId,
@@ -86,7 +85,7 @@ export function Chat(props: ChatProps) {
         toast.error(error.message);
         setStatus(ChatStatus.READY);
         setMessages((prevMessages) =>
-          prevMessages.filter((msg) =>
+          prevMessages.map((msg) =>
             msg.id === assistantMessageId
               ? {
                   ...msg,
@@ -116,7 +115,7 @@ export function Chat(props: ChatProps) {
   };
 
   return (
-    <div className="bg-background flex h-full w-full flex-col">
+    <div className="bg-background flex h-full w-full flex-col overflow-hidden">
       {/* Message List */}
       <div className="box-border flex h-0 w-full flex-1 flex-col overflow-y-auto">
         <Messages chatId={chatId} status={status} messages={messages} />

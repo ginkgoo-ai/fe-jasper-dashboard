@@ -209,7 +209,7 @@ function PureMultimodalInput(props: MultimodalInputProps) {
       </div>
 
       <div className="absolute bottom-0 right-0 flex w-fit flex-row justify-end p-2">
-        {status === ChatStatus.SUBMITTED ? (
+        {[ChatStatus.SUBMITTED, ChatStatus.STREAMING].includes(status) ? (
           <ButtonStop onStop={onStop} />
         ) : (
           <ButtonSend value={value} onSubmitForm={handleSubmitForm} uploadQueue={uploadQueue} />

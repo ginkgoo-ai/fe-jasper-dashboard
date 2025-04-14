@@ -10,7 +10,7 @@ export const ThinkingMessage = () => {
   return (
     <motion.div
       data-testid="message-assistant-loading"
-      className="group/message mx-auto w-full px-[0.125rem]"
+      className="group/message mx-auto box-border w-full px-[0.125rem]"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1, transition: { delay: 1 } }}
       data-role={role}

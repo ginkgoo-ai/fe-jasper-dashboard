@@ -24,7 +24,7 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
     <AnimatePresence>
       <motion.div
         data-testid={`message-${message.role}`}
-        className="group/message mx-auto w-full px-[0.125rem]"
+        className="group/message mx-auto box-border w-full px-[0.125rem]"
         initial={{ y: 5, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         data-role={message.role}
@@ -43,8 +43,8 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
             </div>
           )}
 
-          <div className="flex w-full flex-col gap-4">
-            {message.attachments && (
+          <div className="flex w-0 flex-1 flex-col gap-4 overflow-hidden">
+            {message.attachments && message.attachments.length > 0 && (
               <div
                 data-testid={`message-attachments`}
                 className={cn("flex flex-row justify-end gap-2", {
