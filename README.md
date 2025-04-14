@@ -12,7 +12,7 @@ Jasper Dashboard is a frontend application that provides a sophisticated user in
 - **UI Library**: React 19
 - **Styling**: Tailwind CSS 4
 - **Type System**: TypeScript
-- **UI Components**: 
+- **UI Components**:
   - Radix UI
   - Framer Motion
   - Lucide React
@@ -31,12 +31,14 @@ Jasper Dashboard is a frontend application that provides a sophisticated user in
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone [repository-url]
    cd fe-jasper-dashboard
    ```
 
 2. Install dependencies:
+
    ```bash
    yarn install
    ```
