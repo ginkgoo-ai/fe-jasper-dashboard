@@ -23,7 +23,9 @@ const Header = () => {
           </div>
         </div>
         <div className="relative flex h-full items-center justify-between md:hidden">
-          <Menu />
+          <Link href="/" className="flex flex-[0_0_auto] flex-row items-center space-x-[1rem]">
+            <Menu />
+          </Link>
           <div className="absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] text-[1.25rem]">{GlobalManager.siteName}</div>
           <User />
         </div>

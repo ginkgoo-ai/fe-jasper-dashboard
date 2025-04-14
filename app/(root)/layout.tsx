@@ -20,10 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      </head>
       <body className="flex h-[100vh] w-[100vw] flex-col">
         <Header />
-        <main className="flex w-[100vw] flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[var(--width-max)] flex-1 flex-col px-[var(--width-padding)]">{children}</div>
+        <main className="flex h-0 w-[100vw] flex-1 flex-col  items-center overflow-y-auto">
+          <div className="flex h-0 w-full max-w-[var(--width-max)] flex-1 flex-col px-[var(--width-padding)]">{children}</div>
         </main>
         <Toaster position="top-center" />
       </body>
