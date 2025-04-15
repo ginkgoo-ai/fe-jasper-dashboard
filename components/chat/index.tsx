@@ -122,7 +122,7 @@ export function Chat(props: ChatProps) {
         <Messages chatId={chatId} status={status} messages={messages} />
       </div>
       {/* Input Form */}
-      <form className="bg-background mx-auto box-border flex w-full px-[0.125rem] pb-4 pt-[0.25rem] md:pb-6">
+      <form className="bg-background mx-auto box-border flex w-full px-[0.25rem] pb-4 pt-[0.25rem] md:pb-6">
         <InputMultimodal
           chatId={chatId}
           value={multimodalValue}

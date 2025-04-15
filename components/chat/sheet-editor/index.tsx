@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 interface SheetEditorProps {
   content: string;
-  saveContent?: (content: string, isCurrentVersion: boolean) => void;
+  onSaveContent?: (content: string, isCurrentVersion: boolean) => void;
   status?: string;
   isCurrentVersion?: boolean;
   currentVersionIndex?: number;
@@ -19,7 +19,7 @@ const MIN_ROWS = 6;
 const MIN_COLS = 3;
 
 const PureSheetEditor = (props: SheetEditorProps) => {
-  const { content, saveContent } = props;
+  const { content, onSaveContent } = props;
   const { theme } = useTheme();
 
   const parseData = useMemo(() => {
@@ -59,6 +59,7 @@ const PureSheetEditor = (props: SheetEditorProps) => {
     const dataColumns = Array.from({ length: maxCols }, (_, i) => ({
       key: i.toString(),
       name: String.fromCharCode(65 + i),
+      editable: !!onSaveContent,
       renderEditCell: textEditor,
       width: 120,
       cellClass: cn(`border-t dark:bg-zinc-950 dark:text-zinc-50`, {
@@ -105,7 +106,7 @@ const PureSheetEditor = (props: SheetEditorProps) => {
     });
 
     const newCsvContent = generateCsv(updatedData);
-    saveContent?.(newCsvContent, true);
+    onSaveContent?.(newCsvContent, true);
   };
 
   return (
@@ -135,7 +136,7 @@ function areEqual(prevProps: SheetEditorProps, nextProps: SheetEditorProps) {
     prevProps.isCurrentVersion === nextProps.isCurrentVersion &&
     !(prevProps.status === "streaming" && nextProps.status === "streaming") &&
     prevProps.content === nextProps.content &&
-    prevProps.saveContent === nextProps.saveContent
+    prevProps.onSaveContent === nextProps.onSaveContent
   );
 }
 

@@ -19,22 +19,25 @@ export default function ChatDetailPage() {
   const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
-    const mockMessages: ChatMessage[] = [
-      mockMessageWithTextOnlyForUser,
-      mockMessageWithTextOnlyForAssistant,
-      mockMessageWithTableForUser,
-      mockMessageWithTableForAssistant,
-      mockMessageWithAttachmentsForUser,
-      mockMessageWithAttachmentsForAssistant,
-      mockMessageWithLongTextForAssistant,
-      mockMessageWithSheetForUser,
-      mockMessageWithSheetForAssistant,
-    ];
+    const isMock = false;
+    const mockMessages: ChatMessage[] = isMock
+      ? [
+          mockMessageWithTextOnlyForUser,
+          mockMessageWithTextOnlyForAssistant,
+          mockMessageWithTableForUser,
+          mockMessageWithTableForAssistant,
+          mockMessageWithAttachmentsForUser,
+          mockMessageWithAttachmentsForAssistant,
+          mockMessageWithLongTextForAssistant,
+          mockMessageWithSheetForUser,
+          mockMessageWithSheetForAssistant,
+        ]
+      : [];
     setInitialMessages(mockMessages);
   }, []);
 
   return (
-    <div className="box-border flex h-0 w-full flex-1 flex-col pt-16">
+    <div className="box-border flex h-0 w-full flex-1 flex-col">
       <Chat initialMessages={initialMessages} />
     </div>
   );
