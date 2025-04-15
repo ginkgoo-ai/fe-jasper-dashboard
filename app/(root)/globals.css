@@ -119,6 +119,12 @@
   body {
     @apply bg-background text-foreground;
   }
+  .font-domine {
+    font-family: 'Domine', serif;
+  }
+  .font-outfit {
+    font-family: 'Outfit', sans-serif;
+  }
 }
 
 html {
