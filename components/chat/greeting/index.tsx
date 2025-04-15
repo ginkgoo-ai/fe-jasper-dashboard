@@ -2,6 +2,7 @@
 
 import { Bot } from "lucide-react";
 import { PreviewMessage } from "@/components/chat/message-preview";
+import { ChatMessage } from "@/types/chat";
 
 interface GreetingProps {
   chatId: string;
@@ -10,13 +11,13 @@ interface GreetingProps {
 export const Greeting = (props: GreetingProps) => {
   const { chatId } = props;
 
-  const message1 = {
+  const message1: ChatMessage = {
     id: "message-1",
     role: "greeting",
     parts: [{ type: "text", text: "I need electrical and plumbing contractors in Austin, TX for a commercial renovation" }],
   };
 
-  const message2 = {
+  const message2: ChatMessage = {
     id: "message-2",
     role: "greeting",
     parts: [{ type: "text", text: "Looking for HVAC specialists near Sacramento for a 20-unit apartment complex" }],
@@ -32,10 +33,10 @@ export const Greeting = (props: GreetingProps) => {
           including location and requirements.I&apos;ll help you find the right subcontractors for the job.
         </p>
       </div>
-      <div className="mt-[3rem]">
+      <div className="mt-[3rem] w-full">
         <PreviewMessage chatId={chatId} message={message1} />
       </div>
-      <div className="mt-[0.75rem]">
+      <div className="mt-[0.75rem] w-full">
         <PreviewMessage chatId={chatId} message={message2} />
       </div>
     </div>

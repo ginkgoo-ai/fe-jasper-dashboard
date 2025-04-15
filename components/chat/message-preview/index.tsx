@@ -7,10 +7,11 @@ import { memo } from "react";
 import { Markdown } from "@/components/chat/markdown";
 import { PreviewAttachment } from "@/components/chat/preview-attachment";
 import { cn } from "@/lib/utils";
+import { ChatMessage } from "@/types/chat";
 
 interface MessagePreviewProps {
   chatId: string;
-  message: any;
+  message: ChatMessage;
 }
 
 const PurePreviewMessage = (props: MessagePreviewProps) => {
@@ -23,7 +24,7 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
     <AnimatePresence>
       <motion.div
         data-testid={`message-${message.role}`}
-        className="group/message mx-auto w-full"
+        className="group/message mx-auto box-border w-full px-[0.125rem]"
         initial={{ y: 5, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         data-role={message.role}
@@ -42,10 +43,16 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
             </div>
           )}
 
-          <div className="flex w-full flex-col gap-4">
-            {message.experimental_attachments && (
-              <div data-testid={`message-attachments`} className="flex flex-row justify-end gap-2">
-                {message.experimental_attachments.map((attachment: any) => (
+          <div className="flex w-0 flex-1 flex-col gap-4 overflow-hidden">
+            {message.attachments && message.attachments.length > 0 && (
+              <div
+                data-testid={`message-attachments`}
+                className={cn("flex flex-row justify-end gap-2", {
+                  "justify-end": message.role === "user",
+                  "justify-start": message.role !== "user",
+                })}
+              >
+                {message.attachments.map((attachment: any) => (
                   <PreviewAttachment key={attachment.url} attachment={attachment} />
                 ))}
               </div>

@@ -1,7 +1,14 @@
 import { Loader } from "lucide-react";
+import { ChatMessageAttachment } from "@/types/chat";
 
-export const PreviewAttachment = ({ attachment, isUploading = false }: { attachment: any; isUploading?: boolean }) => {
-  const { name, url, contentType } = attachment;
+interface PreviewAttachmentProps {
+  attachment: ChatMessageAttachment;
+  isUploading?: boolean;
+}
+
+export const PreviewAttachment = (props: PreviewAttachmentProps) => {
+  const { attachment, isUploading = false } = props;
+  const { name, contentType, url } = attachment;
 
   return (
     <div data-testid="input-attachment-preview" className="flex flex-col gap-2">
