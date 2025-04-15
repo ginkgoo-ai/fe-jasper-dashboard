@@ -11,7 +11,7 @@ interface DocumentHeaderProps extends ChatMessagePart {
 const PureDocumentHeader = (props: DocumentHeaderProps) => {
   const { type, title, isStreaming } = props;
   return (
-    <div className="dark:bg-muted flex flex-row items-start justify-between gap-2 rounded-t-2xl border border-b-0 p-4 sm:items-center dark:border-zinc-700">
+    <div className="flex flex-row items-start justify-between gap-2 rounded-t-2xl border border-b-0 p-4 sm:items-center">
       <div className="flex flex-row items-start gap-3 sm:items-center">
         <div className="text-muted-foreground">
           {isStreaming ? (

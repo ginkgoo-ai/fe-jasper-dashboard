@@ -26,7 +26,7 @@ export const Greeting = (props: GreetingProps) => {
   return (
     <div className="flex h-full w-full flex-col items-start justify-center">
       <div className="flex w-full flex-col items-center justify-center">
-        <Bot className="h-[2.875rem] w-[2.875rem]" />
+        <Bot className="mt-[1.5rem] h-[2.875rem] w-[2.875rem]" />
         <p className="mt-[1.5rem] text-center text-[1.5rem] font-bold">Find Qualified Subcontractors</p>
         <p className="mt-[2.25rem] text-center text-[1rem]">Tell me about your construction project,</p>
         <p className="mt-[0] text-center text-[1rem]">

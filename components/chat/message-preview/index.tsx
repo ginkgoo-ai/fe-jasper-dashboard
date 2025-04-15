@@ -9,7 +9,9 @@ import { Markdown } from "@/components/chat/markdown";
 import { PreviewAttachment } from "@/components/chat/preview-attachment";
 import { DocumentHeader } from "@/components/chat/preview-header";
 import { SheetEditor } from "@/components/chat/sheet-editor";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useUserStore } from "@/store";
 import { ChatMessage, ChatMessagePart } from "@/types/chat";
 
 interface MessagePreviewProps {
@@ -22,6 +24,9 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
     // chatId,
     message,
   } = props;
+
+  const { userInfo } = useUserStore();
+  const defaultAvatar = "/default.png";
 
   const renderMessagePartText = (part: ChatMessagePart) => {
     return <Markdown>{part.content || ""}</Markdown>;
@@ -51,8 +56,8 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
       >
         <div
           className={cn("flex w-full flex-row gap-4", {
-            // "w-full": mode === "edit",
-            // "group-data-[role=user]/message:w-fit": mode !== "edit",
+            "flex-row": message.role !== "user",
+            "flex-row-reverse": message.role === "user",
           })}
         >
           {/* Avatar Bot */}
@@ -61,6 +66,15 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
               <div className="translate-y-px">
                 <Bot size={14} />
               </div>
+            </div>
+          )}
+          {/* Avatar User */}
+          {message.role === "user" && (
+            <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
+              <Avatar className="size-8">
+                <AvatarImage src={userInfo?.picture ?? defaultAvatar} />
+                <AvatarFallback>{userInfo?.fullname?.charAt(0)}</AvatarFallback>
+              </Avatar>
             </div>
           )}
           {/* Content */}
@@ -110,6 +124,8 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
               );
             })}
           </div>
+          {/* Block */}
+          <div className="bg-background size-8 shrink-0"></div>
         </div>
       </motion.div>
     </AnimatePresence>
