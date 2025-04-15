@@ -113,15 +113,12 @@ const User = () => {
 const Header = (props: { className?: string }) => {
   return (
     <header
-      className={cn(
-        "border-default sl-layout-background flex h-16 w-full items-center justify-between border-b px-4",
-        props.className ?? ""
-      )}
+      className={cn("border-default bg-background flex h-16 w-full items-center justify-between border-b px-4", props.className ?? "")}
     >
       <div className="flex items-center gap-4">
         <Link href="/" className="flex flex-[0_0_auto] flex-row items-center space-x-[1rem]">
           <Image className="!h-[1.5rem] !w-[1.5rem] dark:invert" src="/logo.svg" alt="logo" width={0} height={0} priority />
-          <span className="hidden text-base lg:inline">{GlobalManager.siteName}</span>
+          <span className="hidden text-base font-semibold lg:inline">{GlobalManager.siteName}</span>
         </Link>
       </div>
       <div className="flex items-center gap-4">
