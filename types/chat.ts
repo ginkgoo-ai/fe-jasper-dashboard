@@ -11,8 +11,9 @@ export enum ChatStatus {
 }
 
 export interface ChatMessagePart {
-  type: "text";
-  text?: string;
+  type: "text" | "sheet" | "image";
+  title?: string;
+  content?: string;
 }
 
 export interface ChatMessageAttachment {

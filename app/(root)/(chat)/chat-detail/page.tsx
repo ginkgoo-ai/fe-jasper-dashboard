@@ -3,31 +3,34 @@
 import { useEffect, useState } from "react";
 import { Chat } from "@/components/chat";
 import { ChatMessage } from "@/types/chat";
-
-// import {
-//   mockMessageAssistantLongText,
-//   mockMessageAssistantTextOnly,
-//   mockMessageAssistantWithAttachments,
-//   mockMessageAssistantWithTable,
-//   mockMessageUserTextOnly,
-//   mockMessageUserWithAttachments,
-//   mockMessageUserWithTable,
-// } from "./mock";
+import {
+  mockMessageWithAttachmentsForAssistant,
+  mockMessageWithAttachmentsForUser,
+  mockMessageWithLongTextForAssistant,
+  mockMessageWithSheetForAssistant,
+  mockMessageWithSheetForUser,
+  mockMessageWithTableForAssistant,
+  mockMessageWithTableForUser,
+  mockMessageWithTextOnlyForAssistant,
+  mockMessageWithTextOnlyForUser,
+} from "./mock";
 
 export default function ChatDetailPage() {
-  const [initialMessages] = useState<ChatMessage[]>([]);
+  const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
-    // const mockMessages: ChatMessage[] = [
-    //   mockMessageUserTextOnly,
-    //   mockMessageAssistantTextOnly,
-    //   mockMessageUserWithTable,
-    //   mockMessageAssistantWithTable,
-    //   mockMessageUserWithAttachments,
-    //   mockMessageAssistantWithAttachments,
-    //   mockMessageAssistantLongText,
-    // ];
-    // setInitialMessages(mockMessages);
+    const mockMessages: ChatMessage[] = [
+      mockMessageWithTextOnlyForUser,
+      mockMessageWithTextOnlyForAssistant,
+      mockMessageWithTableForUser,
+      mockMessageWithTableForAssistant,
+      mockMessageWithAttachmentsForUser,
+      mockMessageWithAttachmentsForAssistant,
+      mockMessageWithLongTextForAssistant,
+      mockMessageWithSheetForUser,
+      mockMessageWithSheetForAssistant,
+    ];
+    setInitialMessages(mockMessages);
   }, []);
 
   return (
