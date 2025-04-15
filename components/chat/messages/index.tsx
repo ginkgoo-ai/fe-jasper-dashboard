@@ -3,7 +3,7 @@ import { memo } from "react";
 import { Greeting } from "@/components/chat/greeting";
 import { PreviewMessage } from "@/components/chat/message-preview";
 import { ThinkingMessage } from "@/components/chat/message-thinking";
-import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
+import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 import { ChatMessage, ChatStatus } from "@/types/chat";
 
 interface MessagesProps {

@@ -71,7 +71,7 @@ const PureSheetEditor = (props: SheetEditorProps) => {
     }));
 
     return [rowNumberColumn, ...dataColumns];
-  }, [parseData]);
+  }, [parseData, onSaveContent]);
 
   const initialRows = useMemo(() => {
     return parseData.map((row: string[], rowIndex: number) => {

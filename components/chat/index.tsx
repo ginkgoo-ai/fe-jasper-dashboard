@@ -50,7 +50,8 @@ export function Chat(props: ChatProps) {
     setStatus(ChatStatus.SUBMITTED);
 
     cancelFetchRef.current = fetchEventSource({
-      url: "https://api-jasper.ginkgoo.dev/api/ai/assistant", // url: "http://192.168.31.205:6011/assistant",
+      url: "https://api-jasper.ginkgoo.dev/api/ai/assistant",
+      // url: "https://192.168.31.205:6011/assistant",
       query: {
         message: multimodalValue,
         chatId: chatId,

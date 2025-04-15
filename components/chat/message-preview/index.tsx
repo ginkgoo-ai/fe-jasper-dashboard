@@ -95,7 +95,7 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
                   <div
                     className={cn("flex flex-col overflow-auto", {
                       "bg-primary text-primary-foreground rounded-xl px-3 py-2": message.role === "user",
-                      "text-secondary-foreground rounded-xl bg-[#F3F4F6] px-3 py-2": message.role !== "user",
+                      "text-secondary-foreground bg-secondary rounded-xl px-3 py-2": message.role !== "user",
                     })}
                   >
                     {
