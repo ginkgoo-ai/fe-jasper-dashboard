@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import type React from "react";
 import { type ChangeEvent, memo, useCallback, useEffect, useRef, useState } from "react";
-import { ButtonAttachments } from "@/components/chat/button-attachments";
+// import { ButtonAttachments } from "@/components/chat/button-attachments";
 import { ButtonSend } from "@/components/chat/button-send";
 import { ButtonStop } from "@/components/chat/button-stop";
 import { PreviewAttachment } from "@/components/chat/preview-attachment";
@@ -204,9 +204,9 @@ function PureInputMultimodal(props: InputMultimodalProps) {
         }}
       />
 
-      <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
+      {/* <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
         <ButtonAttachments fileInputRef={fileInputRef} status={status} />
-      </div>
+      </div> */}
 
       <div className="absolute bottom-0 right-0 flex w-fit flex-row justify-end p-2">
         {[ChatStatus.SUBMITTED, ChatStatus.STREAMING].includes(status) ? (

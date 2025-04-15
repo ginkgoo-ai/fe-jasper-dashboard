@@ -35,46 +35,47 @@ export function Chat(props: ChatProps) {
   };
 
   const handleMultimodalSubmit = () => {
-    const userInput = multimodalValue;
+    const assistantMessageId = uuidv4();
+
     setMultimodalValue("");
     setMessages([
       ...messages,
       {
         id: uuidv4(),
         role: "user",
-        parts: [{ type: "text", text: userInput }],
+        parts: [{ type: "text", content: multimodalValue }],
         attachments: attachments.length > 0 ? attachments : undefined,
       },
     ]);
     setStatus(ChatStatus.SUBMITTED);
 
-    const assistantMessageId = uuidv4();
-
     cancelFetchRef.current = fetchEventSource({
-      url: "http://192.168.31.205:6011/assistant",
+      url: "https://api-jasper.ginkgoo.dev/api/ai/assistant", // url: "http://192.168.31.205:6011/assistant",
       query: {
-        message: userInput,
+        message: multimodalValue,
         chatId: chatId,
       },
       onChunk: (responseText) => {
         setStatus(ChatStatus.STREAMING);
         setMessages((prevMessages) => {
           if (prevMessages.find((msg) => msg.id === assistantMessageId)) {
+            // Update the assistant message with the new text
             return prevMessages.map((msg) =>
               msg.id === assistantMessageId
                 ? {
                     ...msg,
-                    parts: [{ type: "text", text: responseText }],
+                    parts: [{ type: "text", content: responseText }],
                   }
                 : msg
             );
           } else {
+            // Create a new assistant message
             return [
               ...prevMessages,
               {
                 id: assistantMessageId,
                 role: "assistant",
-                parts: [{ type: "text", text: responseText }],
+                parts: [{ type: "text", content: responseText }],
               },
             ];
           }
@@ -89,7 +90,7 @@ export function Chat(props: ChatProps) {
             msg.id === assistantMessageId
               ? {
                   ...msg,
-                  parts: [{ type: "text", text: "Sorry, the request failed. Please try again later." }],
+                  parts: [{ type: "text", content: "Sorry, the request failed. Please try again later." }],
                 }
               : msg
           )
@@ -121,7 +122,7 @@ export function Chat(props: ChatProps) {
         <Messages chatId={chatId} status={status} messages={messages} />
       </div>
       {/* Input Form */}
-      <form className="bg-background mx-auto flex w-full pb-4 md:pb-6">
+      <form className="bg-background mx-auto box-border flex w-full px-[0.125rem] pb-4 pt-[0.25rem] md:pb-6">
         <InputMultimodal
           chatId={chatId}
           value={multimodalValue}

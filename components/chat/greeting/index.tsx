@@ -14,13 +14,13 @@ export const Greeting = (props: GreetingProps) => {
   const message1: ChatMessage = {
     id: "message-1",
     role: "greeting",
-    parts: [{ type: "text", text: "I need electrical and plumbing contractors in Austin, TX for a commercial renovation" }],
+    parts: [{ type: "text", content: "I need electrical and plumbing contractors in Austin, TX for a commercial renovation" }],
   };
 
   const message2: ChatMessage = {
     id: "message-2",
     role: "greeting",
-    parts: [{ type: "text", text: "Looking for HVAC specialists near Sacramento for a 20-unit apartment complex" }],
+    parts: [{ type: "text", content: "Looking for HVAC specialists near Sacramento for a 20-unit apartment complex" }],
   };
 
   return (

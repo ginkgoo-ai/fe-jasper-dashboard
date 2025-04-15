@@ -2,39 +2,39 @@ import { v4 as uuidv4 } from "uuid";
 import { ChatMessage } from "@/types/chat";
 
 // Assistant type message - Text only
-export const mockMessageAssistantTextOnly: ChatMessage = {
+export const mockMessageWithTextOnlyForAssistant: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "assistant",
   parts: [
     {
       type: "text",
-      text: "Hello! I am your AI assistant, pleased to be of help. How may I assist you today?",
+      content: "Hello! I am your AI assistant, pleased to be of help. How may I assist you today?",
     },
   ],
   attachments: [],
 };
 
 // User type message - Text only
-export const mockMessageUserTextOnly: ChatMessage = {
+export const mockMessageWithTextOnlyForUser: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "user",
   parts: [
     {
       type: "text",
-      text: "Could you check the recent weather forecast for me? I'd like to know if the weekend is suitable for outdoor activities.",
+      content: "Could you check the recent weather forecast for me? I'd like to know if the weekend is suitable for outdoor activities.",
     },
   ],
   attachments: [],
 };
 
 // Assistant type message - With table
-export const mockMessageAssistantWithTable: ChatMessage = {
+export const mockMessageWithTableForAssistant: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "assistant",
   parts: [
     {
       type: "text",
-      text: `Here is this week's weather forecast:
+      content: `Here is this week's weather forecast:
 
 | Date | Weather | Temperature | Suitable for outdoor activities |
 |:------:|:---------:|:-------------:|:--------------------------------:|
@@ -50,13 +50,13 @@ The weekend weather is quite good, very suitable for outdoor activities. I recom
 };
 
 // User type message - With table
-export const mockMessageUserWithTable: ChatMessage = {
+export const mockMessageWithTableForUser: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "user",
   parts: [
     {
       type: "text",
-      text: `Here is my planned activity schedule. Do you think it's reasonable?
+      content: `Here is my planned activity schedule. Do you think it's reasonable?
 
 | Time | Activity | Location | Items to prepare |
 |:------:|:----------:|:----------:|:----------------:|
@@ -70,13 +70,14 @@ export const mockMessageUserWithTable: ChatMessage = {
 };
 
 // Assistant type message - Text + attachments
-export const mockMessageAssistantWithAttachments: ChatMessage = {
+export const mockMessageWithAttachmentsForAssistant: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "assistant",
   parts: [
     {
       type: "text",
-      text: "I have prepared two route maps for you, one for park hiking and the other for suburban cycling. Both routes have been carefully designed, with beautiful scenery and are suitable for beginners. You can choose a suitable route based on your physical condition and available time.",
+      content:
+        "I have prepared two route maps for you, one for park hiking and the other for suburban cycling. Both routes have been carefully designed, with beautiful scenery and are suitable for beginners. You can choose a suitable route based on your physical condition and available time.",
     },
   ],
   attachments: [
@@ -96,13 +97,13 @@ export const mockMessageAssistantWithAttachments: ChatMessage = {
 };
 
 // User type message - Text + attachments
-export const mockMessageUserWithAttachments: ChatMessage = {
+export const mockMessageWithAttachmentsForUser: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "user",
   parts: [
     {
       type: "text",
-      text: "I took some photos during my outdoor activities. Could you help me identify what species these plants are?",
+      content: "I took some photos during my outdoor activities. Could you help me identify what species these plants are?",
     },
   ],
   attachments: [
@@ -122,13 +123,13 @@ export const mockMessageUserWithAttachments: ChatMessage = {
 };
 
 // Assistant type message - Long text
-export const mockMessageAssistantLongText: ChatMessage = {
+export const mockMessageWithLongTextForAssistant: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "assistant",
   parts: [
     {
       type: "text",
-      text: `Outdoor Activity Safety Guide:
+      content: `Outdoor Activity Safety Guide:
 
 1. Weather check: Check the weather forecast before departure, avoid extreme weather.
 2. Inform others: Let friends and family know your itinerary and expected return time.
@@ -148,13 +149,13 @@ Enjoy your outdoor activities! Should you have any other questions, feel free to
 };
 
 // User type message - Code example
-export const mockMessageUserWithCode: ChatMessage = {
+export const mockMessageWithCodeForUser: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "user",
   parts: [
     {
       type: "text",
-      text: `I'm writing a weather query function, but I've encountered some issues. Here's my code:
+      content: `I'm writing a weather query function, but I've encountered some issues. Here's my code:
 
 \`\`\`javascript
 async function getWeatherData(location) {
@@ -187,13 +188,13 @@ Could you help me improve this code and show how to use it in a React component?
 };
 
 // Assistant type message - Code example
-export const mockMessageAssistantWithCode: ChatMessage = {
+export const mockMessageWithCodeForAssistant: ChatMessage = {
   id: `message-${uuidv4()}`,
   role: "assistant",
   parts: [
     {
       type: "text",
-      text: `Here's the improved code, showing how to use it in a React component:
+      content: `Here's the improved code, showing how to use it in a React component:
 
 \`\`\`javascript
 // weatherService.js
@@ -309,6 +310,54 @@ Main improvements:
 3. Added API key retrieval from environment variables
 4. Created a complete React component with loading status and error handling
 5. Used useEffect to monitor location changes to fetch new data`,
+    },
+  ],
+  attachments: [],
+};
+
+// User type message - With sheet
+export const mockMessageWithSheetForUser: ChatMessage = {
+  id: `message-${uuidv4()}`,
+  role: "user",
+  parts: [
+    {
+      type: "sheet",
+      title: "Occupation Analysis",
+      content: `Name,Age,Occupation,Location
+John,32,Engineer,New York
+Sarah,28,Designer,San Francisco
+Michael,45,Manager,Chicago
+Emily,36,Doctor,Boston
+David,29,Developer,Seattle`,
+    },
+  ],
+  attachments: [],
+};
+
+// Assistant type message - With sheet
+export const mockMessageWithSheetForAssistant: ChatMessage = {
+  id: `message-${uuidv4()}`,
+  role: "assistant",
+  parts: [
+    {
+      type: "text",
+      content:
+        "Based on the data you provided, I've created an analysis table showing the average age and distribution across different occupations:",
+    },
+    {
+      type: "sheet",
+      title: "Occupation Analysis",
+      content: `Occupation,Average Age,Count,Percentage,Salary Range,Education Level,Experience Years,Skill Level,Department Size
+Engineer,32,1,20%,$85k-$95k,Bachelor's,4-5,Intermediate,Medium
+Designer,28,1,20%,$70k-$75k,Master's,3,Intermediate,Small
+Manager,45,1,20%,$120k+,MBA,15,Expert,Large
+Doctor,36,1,20%,$150k+,MD,8,Expert,Medium
+Developer,29,1,20%,$90k-$100k,Bachelor's,4,Intermediate,Medium`,
+    },
+    {
+      type: "text",
+      content:
+        "From the table, we can see that the Manager has the highest age at 45, while the Designer has the lowest at 28. All occupations have an equal sample size, each accounting for 20% of the total.",
     },
   ],
   attachments: [],

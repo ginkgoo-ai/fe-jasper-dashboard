@@ -3,11 +3,14 @@
 import equal from "fast-deep-equal";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bot } from "lucide-react";
-import { memo } from "react";
+import React, { memo } from "react";
+import Image from "next/image";
 import { Markdown } from "@/components/chat/markdown";
 import { PreviewAttachment } from "@/components/chat/preview-attachment";
+import { DocumentHeader } from "@/components/chat/preview-header";
+import { SheetEditor } from "@/components/chat/sheet-editor";
 import { cn } from "@/lib/utils";
-import { ChatMessage } from "@/types/chat";
+import { ChatMessage, ChatMessagePart } from "@/types/chat";
 
 interface MessagePreviewProps {
   chatId: string;
@@ -20,6 +23,23 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
     message,
   } = props;
 
+  const renderMessagePartText = (part: ChatMessagePart) => {
+    return <Markdown>{part.content || ""}</Markdown>;
+  };
+
+  const renderMessagePartSheet = (part: ChatMessagePart) => {
+    return (
+      <div className="flex flex-col">
+        <DocumentHeader type="sheet" title={part.title || ""} content={part.content || ""} isStreaming={false} />
+        <SheetEditor content={part.content || ""} />
+      </div>
+    );
+  };
+
+  const renderMessagePartImage = (part: ChatMessagePart) => {
+    return <Image src={part.content || ""} alt={part.title || ""} width={300} height={200} />;
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -30,11 +50,12 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
         data-role={message.role}
       >
         <div
-          className={cn("flex w-full gap-4 group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl", {
+          className={cn("flex w-full flex-row gap-4", {
             // "w-full": mode === "edit",
             // "group-data-[role=user]/message:w-fit": mode !== "edit",
           })}
         >
+          {/* Avatar Bot */}
           {message.role === "assistant" && (
             <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
               <div className="translate-y-px">
@@ -42,8 +63,9 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
               </div>
             </div>
           )}
-
+          {/* Content */}
           <div className="flex w-0 flex-1 flex-col gap-4 overflow-hidden">
+            {/* Attachments */}
             {message.attachments && message.attachments.length > 0 && (
               <div
                 data-testid={`message-attachments`}
@@ -57,28 +79,35 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
                 ))}
               </div>
             )}
-
-            {message.parts?.map((part: any, index: number) => {
+            {/* Parts */}
+            {message.parts?.map((part: ChatMessagePart, index: number) => {
               const { type } = part;
               const key = `message-${message.id}-part-${index}`;
 
-              if (type === "text") {
-                return (
-                  <div key={key} className="flex flex-row items-start gap-2">
-                    {message.role === "user" && <div className="flex-1"></div>}
-
-                    <div
-                      data-testid="message-content"
-                      className={cn("flex flex-col gap-4", {
-                        "bg-primary text-primary-foreground rounded-xl px-3 py-2": message.role === "user",
-                        "text-secondary-foreground rounded-xl bg-[#F3F4F6] px-3 py-2": message.role !== "user",
-                      })}
-                    >
-                      <Markdown>{part.text}</Markdown>
-                    </div>
+              return (
+                <div
+                  key={key}
+                  className={cn("flex flex-row items-start gap-2", {
+                    "justify-end": message.role === "user",
+                    "justify-start": message.role !== "user",
+                  })}
+                >
+                  <div
+                    className={cn("flex flex-col overflow-auto", {
+                      "bg-primary text-primary-foreground rounded-xl px-3 py-2": message.role === "user",
+                      "text-secondary-foreground rounded-xl bg-[#F3F4F6] px-3 py-2": message.role !== "user",
+                    })}
+                  >
+                    {
+                      {
+                        text: renderMessagePartText(part),
+                        sheet: renderMessagePartSheet(part),
+                        image: renderMessagePartImage(part),
+                      }[type]
+                    }
                   </div>
-                );
-              }
+                </div>
+              );
             })}
           </div>
         </div>
