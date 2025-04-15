@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ChatMessageAttachment, ChatStatus } from "@/types/chat";
 
-interface MultimodalInputProps {
+interface InputMultimodalProps {
   chatId: string;
   value: string;
   status: ChatStatus;
@@ -26,7 +26,7 @@ interface MultimodalInputProps {
   onAttachmentsChange: (attachments: Array<ChatMessageAttachment>) => void;
 }
 
-function PureMultimodalInput(props: MultimodalInputProps) {
+function PureInputMultimodal(props: InputMultimodalProps) {
   const { chatId, value, status, attachments, className, onInput, onSubmit, onStop, onAttachmentsChange } = props;
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -219,7 +219,7 @@ function PureMultimodalInput(props: MultimodalInputProps) {
   );
 }
 
-export const MultimodalInput = memo(PureMultimodalInput, (prevProps, nextProps) => {
+export const InputMultimodal = memo(PureInputMultimodal, (prevProps, nextProps) => {
   if (prevProps.value !== nextProps.value) return false;
   if (prevProps.status !== nextProps.status) return false;
   if (!equal(prevProps.attachments, nextProps.attachments)) return false;

@@ -3,8 +3,8 @@
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { useEffect, useRef, useState } from "react";
+import { InputMultimodal } from "@/components/chat/input-multimodal";
 import { Messages } from "@/components/chat/messages";
-import { MultimodalInput } from "@/components/chat/multimodal-input";
 import {
   fetchEventSource,
   // fetcher,
@@ -122,7 +122,7 @@ export function Chat(props: ChatProps) {
       </div>
       {/* Input Form */}
       <form className="bg-background mx-auto flex w-full pb-4 md:pb-6">
-        <MultimodalInput
+        <InputMultimodal
           chatId={chatId}
           value={multimodalValue}
           status={status}
