@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is([data-theme="dark"] *, .dark *));
 
 @theme inline {
   --color-background: var(--background);
@@ -78,7 +78,8 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-.dark, [data-theme="dark"] {
+.dark,
+[data-theme="dark"] {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -120,10 +121,10 @@
     @apply bg-background text-foreground;
   }
   .font-domine {
-    font-family: 'Domine', serif;
+    font-family: "Domine", serif;
   }
   .font-outfit {
-    font-family: 'Outfit', sans-serif;
+    font-family: "Outfit", sans-serif;
   }
 }
 

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export default function RootPage() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-4 lg:p-12">
-      <div className="relative grid h-full w-full grid-cols-1 gap-12 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-300 p-8 lg:grid-cols-2">
+      <div className="bg-linear-to-br relative grid h-full w-full grid-cols-1 gap-12 overflow-hidden rounded-3xl from-slate-50 to-slate-300 p-8 lg:grid-cols-2 dark:from-slate-600  dark:to-slate-900">
         <div className="absolute bottom-0 right-0 flex items-center justify-center overflow-hidden lg:static">
           <Image
             src="/worker.png"
