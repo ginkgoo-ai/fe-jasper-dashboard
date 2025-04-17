@@ -19,39 +19,41 @@ const CONTENT_PATTERNS = {
 };
 
 export const parseMessageContent = (content: string): ChatMessagePart[] => {
-  // 如果没有特殊格式，直接返回文本
-  if (!Object.keys(CONTENT_PATTERNS).some(type => content.includes(`\`\`\`${type}`))) {
-    return [{ type: 'text', content: content.trim() }];
-  }
+  try {
+    // 如果没有特殊格式，直接返回文本
+    if (!Object.keys(CONTENT_PATTERNS).some(type => content.includes(`\`\`\`${type}`))) {
+      return [{ type: 'text', content: content.trim() }];
+    }
 
-  // 构建分割正则
-  const splitPattern = new RegExp(
-    Object.values(CONTENT_PATTERNS)
-      .map(({ pattern }) => pattern.source)
-      .join('|'),
-    's'
-  );
+    // 构建分割正则
+    const splitPattern = new RegExp(
+      Object.values(CONTENT_PATTERNS)
+        .map(({ pattern }) => pattern.source)
+        .join('|'),
+      's'
+    );
 
-  // 分割内容
-  const segments = content.split(splitPattern);
+    // 分割内容
+    const segments = content.split(splitPattern);
 
-  console.log('segments', segments); // 打印分割后的片段，用于调试
+    console.log('segments', segments); // 打印分割后的片段，用于调试
 
-  // 处理每个片段
-  const res = segments
-    .map(segment => {
-      if (!segment) return null;
-      // 检查是否是特殊格式
-      for (const [, { pattern, extract }] of Object.entries(CONTENT_PATTERNS)) {
-        if (segment.match(pattern)) {
-          return JSON.parse(extract(segment));
+    // 处理每个片段
+
+    return segments
+      .map(segment => {
+        if (!segment) return null;
+        // 检查是否是特殊格式
+        for (const [, { pattern, extract }] of Object.entries(CONTENT_PATTERNS)) {
+          if (segment.match(pattern)) {
+            return JSON.parse(extract(segment));
+          }
         }
-      }
 
-      return { type: 'text', content: segment.trim() };
-    })
-    .filter(Boolean);
-
-  console.info('res', res);
-  return res as any;
+        return { type: 'text', content: segment.trim() };
+      })
+      .filter(Boolean);
+  } catch (error) {
+    return [];
+  }
 };

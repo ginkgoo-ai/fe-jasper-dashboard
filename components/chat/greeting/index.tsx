@@ -45,10 +45,10 @@ export const Greeting = () => {
         </p>
       </div>
       <div className="mt-[3rem] w-full">
-        <PreviewMessage chatId={message1.id} message={message1} />
+        <PreviewMessage message={message1} />
       </div>
       <div className="mt-[0.75rem] w-full">
-        <PreviewMessage chatId={message2.id} message={message2} />
+        <PreviewMessage message={message2} />
       </div>
     </div>
   );
