@@ -1,48 +1,51 @@
-"use client";
+'use client';
 
-import equal from "fast-deep-equal";
-import { AnimatePresence, motion } from "framer-motion";
-import { Bot } from "lucide-react";
-import React, { memo } from "react";
-import Image from "next/image";
-import { Markdown } from "@/components/chat/markdown";
-import { PreviewAttachment } from "@/components/chat/preview-attachment";
-import { DocumentHeader } from "@/components/chat/preview-header";
-import { SheetEditor } from "@/components/chat/sheet-editor";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
-import { useUserStore } from "@/store";
-import { ChatMessage, ChatMessagePart } from "@/types/chat";
+import { Markdown } from '@/components/chat/markdown';
+import { PreviewAttachment } from '@/components/chat/preview-attachment';
+import { DocumentHeader } from '@/components/chat/preview-header';
+import { SheetEditor } from '@/components/chat/sheet-editor';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import { useUserStore } from '@/store';
+import { ChatMessage, ChatMessagePart } from '@/types/chat';
+import equal from 'fast-deep-equal';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Bot } from 'lucide-react';
+import Image from 'next/image';
+import { memo } from 'react';
 
 interface MessagePreviewProps {
-  chatId: string;
   message: ChatMessage;
 }
 
 const PurePreviewMessage = (props: MessagePreviewProps) => {
-  const {
-    // chatId,
-    message,
-  } = props;
+  const { message } = props;
 
   const { userInfo } = useUserStore();
-  const defaultAvatar = "/default.png";
+  const defaultAvatar = '/default.png';
 
   const renderMessagePartText = (part: ChatMessagePart) => {
-    return <Markdown>{part.content || ""}</Markdown>;
+    return <Markdown>{part.content || ''}</Markdown>;
   };
 
   const renderMessagePartSheet = (part: ChatMessagePart) => {
     return (
       <div className="flex flex-col">
-        <DocumentHeader type="sheet" title={part.title || ""} content={part.content || ""} isStreaming={false} />
-        <SheetEditor content={part.content || ""} />
+        <DocumentHeader
+          type="sheet"
+          title={part.title || ''}
+          content={part.content || ''}
+          isStreaming={false}
+        />
+        <SheetEditor content={part.content || ''} />
       </div>
     );
   };
 
   const renderMessagePartImage = (part: ChatMessagePart) => {
-    return <Image src={part.content || ""} alt={part.title || ""} width={300} height={200} />;
+    return (
+      <Image src={part.content || ''} alt={part.title || ''} width={300} height={200} />
+    );
   };
 
   return (
@@ -55,13 +58,13 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
         data-role={message.role}
       >
         <div
-          className={cn("flex w-full flex-row gap-4", {
-            "flex-row": message.role !== "user",
-            "flex-row-reverse": message.role === "user",
+          className={cn('flex w-full flex-row gap-4', {
+            'flex-row': message.role !== 'user',
+            'flex-row-reverse': message.role === 'user',
           })}
         >
           {/* Avatar Bot */}
-          {message.role === "assistant" && (
+          {message.role === 'assistant' && (
             <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
               <div className="translate-y-px">
                 <Bot size={14} />
@@ -69,7 +72,7 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
             </div>
           )}
           {/* Avatar User */}
-          {message.role === "user" && (
+          {message.role === 'user' && (
             <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
               <Avatar className="size-8">
                 <AvatarImage src={userInfo?.picture ?? defaultAvatar} />
@@ -83,9 +86,9 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
             {message.attachments && message.attachments.length > 0 && (
               <div
                 data-testid={`message-attachments`}
-                className={cn("flex flex-row justify-end gap-2", {
-                  "justify-end": message.role === "user",
-                  "justify-start": message.role !== "user",
+                className={cn('flex flex-row justify-end gap-2', {
+                  'justify-end': message.role === 'user',
+                  'justify-start': message.role !== 'user',
                 })}
               >
                 {message.attachments.map((attachment: any) => (
@@ -101,15 +104,17 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
               return (
                 <div
                   key={key}
-                  className={cn("flex flex-row items-start gap-2", {
-                    "justify-end": message.role === "user",
-                    "justify-start": message.role !== "user",
+                  className={cn('flex flex-row items-start gap-2', {
+                    'justify-end': message.role === 'user',
+                    'justify-start': message.role !== 'user',
                   })}
                 >
                   <div
-                    className={cn("flex flex-col overflow-auto", {
-                      "bg-primary text-primary-foreground rounded-xl px-3 py-2": message.role === "user",
-                      "text-secondary-foreground bg-secondary rounded-xl px-3 py-2": message.role !== "user",
+                    className={cn('flex flex-col overflow-auto', {
+                      'bg-primary text-primary-foreground rounded-xl px-3 py-2':
+                        message.role === 'user',
+                      'text-secondary-foreground bg-secondary rounded-xl px-3 py-2':
+                        message.role !== 'user',
                     })}
                   >
                     {

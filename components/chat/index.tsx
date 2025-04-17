@@ -1,114 +1,110 @@
-"use client";
+'use client';
+import { v4 as uuidv4 } from 'uuid';
 
-import { toast } from "sonner";
-import { v4 as uuidv4 } from "uuid";
-import { useEffect, useRef, useState } from "react";
-import { InputMultimodal } from "@/components/chat/input-multimodal";
-import { Messages } from "@/components/chat/messages";
-import {
-  fetchEventSource,
-  // fetcher,
-} from "@/lib/utils";
-import { ChatMessage, ChatMessageAttachment, ChatStatus } from "@/types/chat";
+import { InputMultimodal } from '@/components/chat/input-multimodal';
+import { Messages } from '@/components/chat/messages';
+import { parseMessageContent } from '@/lib/utils';
+import { chat } from '@/service/api';
+import { ChatMessage, ChatMessageAttachment, ChatStatus } from '@/types/chat';
+import { useState } from 'react';
+import answer from './answer';
 
 interface ChatProps {
-  chatId?: string;
-  initialMessages?: ChatMessage[];
+  chatId: string;
 }
 
-export function Chat(props: ChatProps) {
-  const { chatId = uuidv4(), initialMessages = [] } = props;
-
-  const [multimodalValue, setMultimodalValue] = useState("");
+export function Chat({ chatId }: ChatProps) {
+  const [multimodalValue, setMultimodalValue] = useState('');
   const [status, setStatus] = useState<ChatStatus>(ChatStatus.READY);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [attachments, setAttachments] = useState<ChatMessageAttachment[]>([]);
-
-  const cancelFetchRef = useRef<(() => void) | null>(null);
-
-  useEffect(() => {
-    setMessages(initialMessages);
-  }, [initialMessages]);
+  const [requestController, setRequestController] = useState<{
+    cancel: () => void;
+  } | null>(null);
 
   const handleMultimodalInput = (value: string) => {
     setMultimodalValue(value);
   };
 
-  const handleMultimodalSubmit = () => {
+  // chat example: 城市是SAN CARLOS，分包商分类是C10, 帮我查分包商列表，不需要其他信息
+  const handleMultimodalSubmit = async () => {
     const assistantMessageId = uuidv4();
 
-    setMultimodalValue("");
+    setMultimodalValue('');
+    setStatus(ChatStatus.SUBMITTED);
     setMessages([
       ...messages,
       {
         id: uuidv4(),
-        role: "user",
-        parts: [{ type: "text", content: multimodalValue }],
+        role: 'user',
+        parts: [{ type: 'text', content: multimodalValue }],
         attachments: attachments.length > 0 ? attachments : undefined,
       },
     ]);
-    setStatus(ChatStatus.SUBMITTED);
 
-    cancelFetchRef.current = fetchEventSource({
-      url: "https://api-jasper.ginkgoo.dev/api/ai/assistant",
-      // url: "https://192.168.31.205:6011/assistant",
-      query: {
-        message: multimodalValue,
-        chatId: chatId,
-      },
-      onChunk: (responseText) => {
-        setStatus(ChatStatus.STREAMING);
-        setMessages((prevMessages) => {
-          if (prevMessages.find((msg) => msg.id === assistantMessageId)) {
-            // Update the assistant message with the new text
-            return prevMessages.map((msg) =>
-              msg.id === assistantMessageId
-                ? {
-                    ...msg,
-                    parts: [{ type: "text", content: responseText }],
-                  }
-                : msg
-            );
-          } else {
-            // Create a new assistant message
-            return [
-              ...prevMessages,
-              {
-                id: assistantMessageId,
-                role: "assistant",
-                parts: [{ type: "text", content: responseText }],
-              },
-            ];
-          }
+    try {
+      const { cancel, request } = await chat(
+        { chatId, message: multimodalValue },
+        controller => {
+          // 可以立即获取到 controller
+          setRequestController({ cancel: () => controller.abort() });
+        },
+        res => {
+          const parts = parseMessageContent(res);
+
+          setStatus(ChatStatus.STREAMING);
+          setMessages(prevMessages => {
+            if (prevMessages.find(msg => msg.id === assistantMessageId)) {
+              return prevMessages.map(msg =>
+                msg.id === assistantMessageId ? { ...msg, parts } : msg
+              );
+            } else {
+              return [
+                ...prevMessages,
+                {
+                  ...answer.common,
+                  id: assistantMessageId,
+                  parts,
+                },
+              ];
+            }
+          });
+        }
+      );
+
+      // 立即设置取消函数
+      setRequestController({ cancel });
+
+      try {
+        await request;
+      } catch (error: any) {
+        throw error;
+      }
+    } catch (err: any) {
+      if (err.name === 'AbortError' || err.name === 'CanceledError') {
+        setMessages(prev => {
+          return [...prev, { ...answer.error.common, id: assistantMessageId }];
         });
-      },
-      onError: (error) => {
-        console.error("Fetch Error:", error);
-        toast.error(error.message);
-        setStatus(ChatStatus.READY);
-        setMessages((prevMessages) =>
-          prevMessages.map((msg) =>
-            msg.id === assistantMessageId
-              ? {
-                  ...msg,
-                  parts: [{ type: "text", content: "Sorry, the request failed. Please try again later." }],
-                }
-              : msg
-          )
-        );
-      },
-      onComplete: () => {
-        setStatus(ChatStatus.READY);
-        cancelFetchRef.current = null;
-      },
-    });
+      } else {
+        setMessages(prev => {
+          return [...prev, { ...answer.error.cancel, id: assistantMessageId }];
+        });
+      }
+    } finally {
+      setRequestController(null);
+      setStatus(ChatStatus.READY);
+      setMultimodalValue('');
+      setAttachments([]);
+    }
   };
 
   const handleMultimodalStop = () => {
-    if (cancelFetchRef.current) {
-      cancelFetchRef.current();
-      cancelFetchRef.current = null;
+    if (requestController) {
+      requestController.cancel();
+      setRequestController(null);
     }
+    setMultimodalValue('');
+    setAttachments([]);
     setStatus(ChatStatus.READY);
   };
 
@@ -120,12 +116,11 @@ export function Chat(props: ChatProps) {
     <div className="bg-background flex h-full w-full flex-col overflow-hidden">
       {/* Message List */}
       <div className="box-border flex h-0 w-full flex-1 flex-col overflow-y-auto">
-        <Messages chatId={chatId} status={status} messages={messages} />
+        <Messages status={status} messages={messages} />
       </div>
       {/* Input Form */}
       <form className="bg-background mx-auto box-border flex w-full px-[0.25rem] pb-4 pt-[0.25rem] md:pb-6">
         <InputMultimodal
-          chatId={chatId}
           value={multimodalValue}
           status={status}
           attachments={attachments}

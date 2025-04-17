@@ -10,16 +10,16 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const httpsOptions = {
-  key: fs.readFileSync(path.resolve(__dirname, "cert", "local.slatecast.dev-key.pem")),
-  cert: fs.readFileSync(path.resolve(__dirname, "cert", "local.slatecast.dev.pem")),
+  key: fs.readFileSync(path.resolve(__dirname, "cert", "local.jasper.dev-key.pem")),
+  cert: fs.readFileSync(path.resolve(__dirname, "cert", "local.jasper.dev.pem")),
 };
 
 app.prepare().then(() => {
   createServer(httpsOptions, (req, res) => {
     const parsedUrl = parse(req.url, true);
     handle(req, res, parsedUrl);
-  }).listen(443, "local.slatecast.dev", (err) => {
+  }).listen(443, "local.jasper.dev", (err) => {
     if (err) throw err;
-    console.log("> Ready on https://local.slatecast.dev:443");
+    console.log("> Ready on https://local.jasper.dev:443");
   });
 });

@@ -1,33 +1,48 @@
-"use client";
+'use client';
 
 // import { SuggestedActions } from './suggested-actions';
-import equal from "fast-deep-equal";
-import { toast } from "sonner";
-import { useLocalStorage, useWindowSize } from "usehooks-ts";
-import type React from "react";
-import { type ChangeEvent, memo, useCallback, useEffect, useRef, useState } from "react";
+import equal from 'fast-deep-equal';
+import type React from 'react';
+import { type ChangeEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { useWindowSize } from 'usehooks-ts';
 // import { ButtonAttachments } from "@/components/chat/button-attachments";
-import { ButtonSend } from "@/components/chat/button-send";
-import { ButtonStop } from "@/components/chat/button-stop";
-import { PreviewAttachment } from "@/components/chat/preview-attachment";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { ChatMessageAttachment, ChatStatus } from "@/types/chat";
+import { ButtonSend } from '@/components/chat/button-send';
+import { ButtonStop } from '@/components/chat/button-stop';
+import { PreviewAttachment } from '@/components/chat/preview-attachment';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
+import { ChatMessageAttachment, ChatStatus } from '@/types/chat';
 
 interface InputMultimodalProps {
-  chatId: string;
   value: string;
   status: ChatStatus;
   attachments: Array<ChatMessageAttachment>;
   className?: string;
   onInput: (value: string) => void;
-  onSubmit: ({ value, attachments }: { value: string; attachments: Array<ChatMessageAttachment> }) => void;
+  onSubmit: ({
+    value,
+    attachments,
+  }: {
+    value: string;
+    attachments: Array<ChatMessageAttachment>;
+  }) => void;
   onStop: () => void;
+  // 附件
   onAttachmentsChange: (attachments: Array<ChatMessageAttachment>) => void;
 }
 
 function PureInputMultimodal(props: InputMultimodalProps) {
-  const { chatId, value, status, attachments, className, onInput, onSubmit, onStop, onAttachmentsChange } = props;
+  const {
+    value,
+    status,
+    attachments,
+    className,
+    onInput,
+    onSubmit,
+    onStop,
+    onAttachmentsChange,
+  } = props;
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -35,19 +50,17 @@ function PureInputMultimodal(props: InputMultimodalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
-  const [localStorageValue, setLocalStorageValue] = useLocalStorage(`chat-${chatId}-value`, "");
-
   const adjustHeight = () => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
     }
   };
 
   const resetHeight = () => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = "98px";
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = '98px';
     }
   };
 
@@ -61,7 +74,7 @@ function PureInputMultimodal(props: InputMultimodalProps) {
     if (textareaRef.current) {
       const domValue = textareaRef.current.value;
       // Prefer DOM value over localStorage to handle hydration
-      const finalValue = domValue || localStorageValue || "";
+      const finalValue = domValue || '';
       onInput(finalValue);
       adjustHeight();
     }
@@ -85,21 +98,20 @@ function PureInputMultimodal(props: InputMultimodalProps) {
     });
 
     onAttachmentsChange?.([]);
-    setLocalStorageValue("");
     resetHeight();
 
     if (width && width > 768) {
       textareaRef.current?.focus();
     }
-  }, [value, attachments, width, onSubmit, onAttachmentsChange, setLocalStorageValue]);
+  }, [value, attachments, width, onSubmit, onAttachmentsChange]);
 
   const uploadFile = async (file: File) => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
 
     try {
-      const response = await fetch("/api/files/upload", {
-        method: "POST",
+      const response = await fetch('/api/files/upload', {
+        method: 'POST',
         body: formData,
       });
 
@@ -116,8 +128,8 @@ function PureInputMultimodal(props: InputMultimodalProps) {
       const { error } = await response.json();
       toast.error(error);
     } catch (error) {
-      console.error("Error uploading files!", error);
-      toast.error("Failed to upload file, please try again!");
+      console.error('Error uploading files!', error);
+      toast.error('Failed to upload file, please try again!');
     }
   };
 
@@ -125,16 +137,18 @@ function PureInputMultimodal(props: InputMultimodalProps) {
     async (event: ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files || []);
 
-      setUploadQueue(files.map((file) => file.name));
+      setUploadQueue(files.map(file => file.name));
 
       try {
-        const uploadPromises = files.map((file) => uploadFile(file));
+        const uploadPromises = files.map(file => uploadFile(file));
         const uploadedAttachments = await Promise.all(uploadPromises);
-        const successfullyUploadedAttachments = uploadedAttachments.filter((attachment) => attachment !== undefined);
+        const successfullyUploadedAttachments = uploadedAttachments.filter(
+          attachment => attachment !== undefined
+        );
 
         onAttachmentsChange?.([...attachments, ...successfullyUploadedAttachments]);
       } catch (error) {
-        console.error("Error uploading files!", error);
+        console.error('Error uploading files!', error);
       } finally {
         setUploadQueue([]);
       }
@@ -160,18 +174,21 @@ function PureInputMultimodal(props: InputMultimodalProps) {
       />
 
       {(attachments.length > 0 || uploadQueue.length > 0) && (
-        <div data-testid="attachments-preview" className="flex flex-row items-end gap-2 overflow-x-scroll">
-          {attachments.map((attachment) => (
+        <div
+          data-testid="attachments-preview"
+          className="flex flex-row items-end gap-2 overflow-x-scroll"
+        >
+          {attachments.map(attachment => (
             <PreviewAttachment key={attachment.url} attachment={attachment} />
           ))}
 
-          {uploadQueue.map((filename) => (
+          {uploadQueue.map(filename => (
             <PreviewAttachment
               key={filename}
               attachment={{
-                url: "",
+                url: '',
                 name: filename,
-                contentType: "",
+                contentType: '',
               }}
               isUploading={true}
             />
@@ -186,17 +203,20 @@ function PureInputMultimodal(props: InputMultimodalProps) {
         value={value}
         onChange={handleInput}
         className={cn(
-          "bg-muted max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 !text-base dark:border-zinc-700",
+          'bg-muted max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 !text-base dark:border-zinc-700',
           className
         )}
         rows={2}
         autoFocus
-        onKeyDown={(event) => {
-          if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
+        onKeyDown={event => {
+          if (
+            event.key === 'Enter' &&
+            !event.shiftKey &&
+            !event.nativeEvent.isComposing
+          ) {
             event.preventDefault();
-
             if (status !== ChatStatus.READY) {
-              toast.error("Please wait for the model to finish its response!");
+              toast.error('Please wait for the model to finish its response!');
             } else {
               handleSubmitForm();
             }
@@ -212,7 +232,11 @@ function PureInputMultimodal(props: InputMultimodalProps) {
         {[ChatStatus.SUBMITTED, ChatStatus.STREAMING].includes(status) ? (
           <ButtonStop onStop={onStop} />
         ) : (
-          <ButtonSend value={value} onSubmitForm={handleSubmitForm} uploadQueue={uploadQueue} />
+          <ButtonSend
+            value={value}
+            onSubmitForm={handleSubmitForm}
+            uploadQueue={uploadQueue}
+          />
         )}
       </div>
     </div>
