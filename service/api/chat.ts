@@ -21,6 +21,7 @@ const chat = async (
   onRequest?.(controller);
 
   let previousLength = 0;
+  let res = '';
 
   const request = ApiRequest.post<ChatParams>(ChatApi.chat, formData, {
     headers: {
@@ -37,17 +38,12 @@ const chat = async (
       previousLength = responseText.length;
 
       const lines = newText.split('\n');
-      let res = '';
 
       for (const line of lines) {
         if (line.startsWith('data:')) {
           const data = line.split('data:')[1];
-
-          if (data === '[DONE]') break;
-
           try {
-            // const parsedData = JSON.parse(data);
-            onProgress?.((res += data));
+            onProgress?.((res += new String(data)));
           } catch (e) {
             // 如果解析失败但不是空字符串，记录错误
             if (data && data !== '') {
