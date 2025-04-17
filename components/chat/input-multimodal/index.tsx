@@ -13,6 +13,7 @@ import { PreviewAttachment } from '@/components/chat/preview-attachment';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { ChatMessageAttachment, ChatStatus } from '@/types/chat';
+import { ButtonSearchToggle } from '../button-search-toogle';
 
 interface InputMultimodalProps {
   value: string;
@@ -156,6 +157,10 @@ function PureInputMultimodal(props: InputMultimodalProps) {
     [attachments, onAttachmentsChange]
   );
 
+  const handleOnSearchToggle = useCallback((mode: boolean) => {
+    console.log(mode);
+  }, []);
+
   return (
     <div className="relative flex w-full flex-col gap-4">
       {/* {messages.length === 0 &&
@@ -227,6 +232,10 @@ function PureInputMultimodal(props: InputMultimodalProps) {
       {/* <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
         <ButtonAttachments fileInputRef={fileInputRef} status={status} />
       </div> */}
+
+      <div className="absolute bottom-1 left-1">
+        <ButtonSearchToggle onToggle={handleOnSearchToggle} />
+      </div>
 
       <div className="absolute bottom-0 right-0 flex w-fit flex-row justify-end p-2">
         {[ChatStatus.SUBMITTED, ChatStatus.STREAMING].includes(status) ? (
