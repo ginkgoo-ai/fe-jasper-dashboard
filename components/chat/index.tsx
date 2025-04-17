@@ -5,6 +5,7 @@ import { InputMultimodal } from '@/components/chat/input-multimodal';
 import { Messages } from '@/components/chat/messages';
 import { DefaultMessage, parseMessageContent } from '@/lib';
 import { chat } from '@/service/api';
+import { useLogStore } from '@/store';
 import { ChatMessage, ChatMessageAttachment, ChatStatus } from '@/types/chat';
 import { useState } from 'react';
 
@@ -15,11 +16,14 @@ interface ChatProps {
 export function Chat({ chatId }: ChatProps) {
   const [multimodalValue, setMultimodalValue] = useState('');
   const [status, setStatus] = useState<ChatStatus>(ChatStatus.READY);
+  const [originalMessage, setOriginalMessage] = useState<string>('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [attachments, setAttachments] = useState<ChatMessageAttachment[]>([]);
   const [requestController, setRequestController] = useState<{
     cancel: () => void;
   } | null>(null);
+
+  const { addLog } = useLogStore();
 
   const handleMultimodalInput = (value: string) => {
     setMultimodalValue(value);
@@ -52,6 +56,7 @@ export function Chat({ chatId }: ChatProps) {
           const parts = parseMessageContent(res);
 
           setStatus(ChatStatus.STREAMING);
+          setOriginalMessage(res);
           setMessages(prevMessages => {
             if (prevMessages.find(msg => msg.id === assistantMessageId)) {
               return prevMessages.map(msg =>
@@ -90,6 +95,13 @@ export function Chat({ chatId }: ChatProps) {
         });
       }
     } finally {
+      addLog({
+        id: assistantMessageId,
+        role: 'assistant',
+        originalMessage,
+        messages,
+      });
+
       setRequestController(null);
       setStatus(ChatStatus.READY);
       setMultimodalValue('');

@@ -41,7 +41,7 @@ const chat = async (
 
       for (const line of lines) {
         if (line.startsWith('data:')) {
-          const data = line.split('data:')[1]?.trim();
+          const data = line.split('data:')[1];
 
           if (data === '[DONE]') break;
 
