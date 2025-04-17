@@ -36,10 +36,6 @@ export const parseMessageContent = (content: string): ChatMessagePart[] => {
     // 分割内容
     const segments = content.split(splitPattern);
 
-    console.log('segments', segments); // 打印分割后的片段，用于调试
-
-    // 处理每个片段
-
     return segments
       .map(segment => {
         if (!segment) return null;
