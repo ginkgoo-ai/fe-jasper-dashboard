@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Plus } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Plus } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function RootPage() {
   return (
@@ -24,12 +24,13 @@ export default function RootPage() {
           <div className="max-w-full pt-[10%] lg:max-w-[468px] lg:pt-0 2xl:max-w-[768px]">
             <h1 className="font-domine mb-4 text-5xl font-bold">AI-Powered Solutions</h1>
             <p className="font-outfit mb-12 text-2xl">
-              Our AI-driven platform helps you find the best subcontractors quickly and efficiently.
+              Our AI-driven platform helps you find the best subcontractors quickly and
+              efficiently.
             </p>
             <Link
               className={cn(
                 buttonVariants({
-                  size: "lg",
+                  size: 'lg',
                 })
               )}
               href="/chat-detail"

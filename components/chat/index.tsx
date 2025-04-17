@@ -7,7 +7,7 @@ import { DefaultMessage, parseMessageContent } from '@/lib';
 import { chat } from '@/service/api';
 import { useLogStore } from '@/store';
 import { ChatMessage, ChatMessageAttachment, ChatStatus } from '@/types/chat';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface ChatProps {
   chatId: string;
@@ -16,12 +16,13 @@ interface ChatProps {
 export function Chat({ chatId }: ChatProps) {
   const [multimodalValue, setMultimodalValue] = useState('');
   const [status, setStatus] = useState<ChatStatus>(ChatStatus.READY);
-  const [originalMessage, setOriginalMessage] = useState<string>('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [attachments, setAttachments] = useState<ChatMessageAttachment[]>([]);
   const [requestController, setRequestController] = useState<{
     cancel: () => void;
   } | null>(null);
+  const messagesLogRef = useRef<ChatMessage[]>([]);
+  const originalMessageLogRef = useRef<string>('');
 
   const { addLog } = useLogStore();
 
@@ -56,14 +57,18 @@ export function Chat({ chatId }: ChatProps) {
           const parts = parseMessageContent(res);
 
           setStatus(ChatStatus.STREAMING);
-          setOriginalMessage(res);
+          originalMessageLogRef.current = res;
+
           setMessages(prevMessages => {
             if (prevMessages.find(msg => msg.id === assistantMessageId)) {
-              return prevMessages.map(msg =>
+              const _newMessages = prevMessages.map(msg =>
                 msg.id === assistantMessageId ? { ...msg, parts } : msg
               );
+              messagesLogRef.current = _newMessages;
+
+              return _newMessages;
             } else {
-              return [
+              const _newMessages = [
                 ...prevMessages,
                 {
                   ...DefaultMessage.common,
@@ -71,6 +76,9 @@ export function Chat({ chatId }: ChatProps) {
                   parts,
                 },
               ];
+
+              messagesLogRef.current = _newMessages;
+              return _newMessages;
             }
           });
         }
@@ -98,8 +106,8 @@ export function Chat({ chatId }: ChatProps) {
       addLog({
         id: assistantMessageId,
         role: 'assistant',
-        originalMessage,
-        messages,
+        originalMessage: originalMessageLogRef.current,
+        messages: messagesLogRef.current,
       });
 
       setRequestController(null);
