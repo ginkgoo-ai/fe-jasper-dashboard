@@ -1,4 +1,4 @@
-export default {
+export const DefaultMessage = {
   common: {
     id: '',
     role: 'assistant',

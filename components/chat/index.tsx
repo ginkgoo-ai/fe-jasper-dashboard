@@ -3,11 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { InputMultimodal } from '@/components/chat/input-multimodal';
 import { Messages } from '@/components/chat/messages';
-import { parseMessageContent } from '@/lib/utils';
+import { DefaultMessage, parseMessageContent } from '@/lib';
 import { chat } from '@/service/api';
 import { ChatMessage, ChatMessageAttachment, ChatStatus } from '@/types/chat';
 import { useState } from 'react';
-import answer from './answer';
 
 interface ChatProps {
   chatId: string;
@@ -62,7 +61,7 @@ export function Chat({ chatId }: ChatProps) {
               return [
                 ...prevMessages,
                 {
-                  ...answer.common,
+                  ...DefaultMessage.common,
                   id: assistantMessageId,
                   parts,
                 },
@@ -83,11 +82,11 @@ export function Chat({ chatId }: ChatProps) {
     } catch (err: any) {
       if (err.name === 'AbortError' || err.name === 'CanceledError') {
         setMessages(prev => {
-          return [...prev, { ...answer.error.common, id: assistantMessageId }];
+          return [...prev, { ...DefaultMessage.error.common, id: assistantMessageId }];
         });
       } else {
         setMessages(prev => {
-          return [...prev, { ...answer.error.cancel, id: assistantMessageId }];
+          return [...prev, { ...DefaultMessage.error.cancel, id: assistantMessageId }];
         });
       }
     } finally {
