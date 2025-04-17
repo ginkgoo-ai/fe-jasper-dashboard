@@ -1,169 +1,57 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { ApplicationError, FetchStreamParams } from "@/types/fetch";
+import { ChatMessagePart } from '@/types';
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 };
 
-export const router2url = (strPath: string, objParams: Record<string, string> = {}) => {
-  let strResult = strPath;
-  let isFirstParam = !strPath.includes("?");
-
-  for (const key in objParams) {
-    if (isFirstParam) {
-      strResult += `?${key}=${objParams[key]}`;
-      isFirstParam = false;
-    } else {
-      strResult += `&${key}=${objParams[key]}`;
-    }
-  }
-
-  return strResult;
+const CONTENT_PATTERNS = {
+  sheet: {
+    pattern: /(```sheet.*?```)/s,
+    extract: (match: string) => match.match(/```sheet(.*?)```/s)?.[1] || '',
+  },
+  image: {
+    pattern: /(```image.*?```)/s,
+    extract: (match: string) => match.match(/```image(.*?)```/s)?.[1] || '',
+  },
+  // 可以继续添加其他类型的模式
 };
 
-export const fetcher = async (url: string) => {
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    const error = new Error("An error occurred while fetching the data.") as ApplicationError;
-
-    error.info = await res.json();
-    error.status = res.status;
-
-    throw error;
+export const parseMessageContent = (content: string): ChatMessagePart[] => {
+  // 如果没有特殊格式，直接返回文本
+  if (!Object.keys(CONTENT_PATTERNS).some(type => content.includes(`\`\`\`${type}`))) {
+    return [{ type: 'text', content: content.trim() }];
   }
 
-  return res.json();
-};
+  // 构建分割正则
+  const splitPattern = new RegExp(
+    Object.values(CONTENT_PATTERNS)
+      .map(({ pattern }) => pattern.source)
+      .join('|'),
+    's'
+  );
 
-export const fetchStream = async (params: FetchStreamParams) => {
-  const {
-    url = "",
-    method = "GET",
-    headers = { "Content-Type": "application/json" },
-    query = {},
-    body,
-    onDealChunk,
-    onChunk,
-    onComplete,
-    onError,
-  } = params;
+  // 分割内容
+  const segments = content.split(splitPattern);
 
-  const controller = new AbortController();
+  console.log('segments', segments); // 打印分割后的片段，用于调试
 
-  const cancelFetch = () => {
-    controller.abort();
-  };
-
-  const urlWithQuery = router2url(url, query);
-
-  try {
-    const config: Record<string, any> = {
-      method,
-      headers,
-    };
-
-    if (body) {
-      config.body = JSON.stringify(body);
-    }
-
-    const response = await fetch(urlWithQuery, config);
-
-    if (!response.body) {
-      throw new Error("ReadableStream not supported");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let responseText = "";
-
-    const readStream = async () => {
-      const { done, value } = await reader.read();
-
-      if (done) {
-        onComplete();
-        return;
+  // 处理每个片段
+  const res = segments
+    .map(segment => {
+      if (!segment) return null;
+      // 检查是否是特殊格式
+      for (const [, { pattern, extract }] of Object.entries(CONTENT_PATTERNS)) {
+        if (segment.match(pattern)) {
+          return JSON.parse(extract(segment));
+        }
       }
 
-      const chunk = decoder.decode(value, { stream: true });
-      responseText += onDealChunk ? onDealChunk(chunk) : chunk;
+      return { type: 'text', content: segment.trim() };
+    })
+    .filter(Boolean);
 
-      onChunk(responseText);
-
-      return readStream();
-    };
-
-    readStream().catch((error) => {
-      if (error.name === "AbortError") {
-        console.log("Stream request cancelled");
-      } else {
-        onError(error);
-      }
-    });
-
-    return cancelFetch;
-  } catch (error) {
-    console.error("Stream API request error:", error);
-    if (error instanceof Error && error.name !== "AbortError") {
-      onError(error);
-    }
-
-    return cancelFetch;
-  }
-};
-
-export const fetchEventSource = (params: FetchStreamParams) => {
-  const { url = "", query = {}, onDealChunk, onChunk, onComplete, onError } = params;
-
-  const urlWithQuery = router2url(url, query);
-  let eventSource: EventSource | null = null;
-  let responseText = "";
-
-  try {
-    // Create EventSource instance
-    eventSource = new EventSource(urlWithQuery);
-
-    // Handle message event
-    eventSource.onmessage = (event) => {
-      const chunk = event.data;
-      responseText += onDealChunk ? onDealChunk(chunk) : chunk;
-      onChunk(responseText);
-    };
-
-    // Handle connection open event
-    eventSource.onopen = () => {
-      console.log("EventSource connection opened");
-    };
-
-    // Handle error event
-    eventSource.onerror = (error) => {
-      console.log("EventSource onerror:", eventSource);
-      if (eventSource?.readyState === EventSource.CLOSED) {
-        console.error("EventSource error:", error);
-        onError(new Error("EventSource connection error"));
-      }
-      eventSource?.close();
-      onComplete?.();
-    };
-
-    // Return cancel function
-    return () => {
-      if (eventSource) {
-        eventSource.close();
-        console.log("EventSource connection closed");
-        onComplete?.();
-      }
-    };
-  } catch (error) {
-    console.error("Error creating EventSource:", error);
-    if (error instanceof Error) {
-      onError(error);
-    }
-    return () => {
-      if (eventSource) {
-        eventSource.close();
-      }
-    };
-  }
+  console.info('res', res);
+  return res as any;
 };

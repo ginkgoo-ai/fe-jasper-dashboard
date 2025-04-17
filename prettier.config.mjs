@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   parser: "typescript",
   overrides: [
     {
@@ -36,20 +36,21 @@ module.exports = {
       },
     },
   ],
-  jsxSingleQuote: false,
-  singleQuote: false,
-  printWidth: 140,
-  tabWidth: 2,
+  singleQuote: true,
   useTabs: false,
-  trailingComma: "es5",
-  bracketSameLine: false,
+  printWidth: 90,
+  tabWidth: 2,
+  semi: true,
+  htmlWhitespaceSensitivity: 'strict',
+  arrowParens: 'avoid',
   bracketSpacing: true,
-  arrowParens: "always",
-  quoteProps: "preserve",
-  proseWrap: "preserve",
-  htmlWhitespaceSensitivity: "css",
+  proseWrap: 'preserve',
+  trailingComma: 'all',
+  endOfLine: 'lf',
   importOrder: ["^react$", "^next", "^@/(.*)$", "^[./]"],
   importOrderSeparation: false,
   importOrderSortSpecifiers: true,
-  plugins: ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  plugins: ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss", 'prettier-plugin-organize-imports'],
 };
+
+

@@ -1,4 +1,10 @@
-import axios, { AxiosError, AxiosHeaders, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, {
+  AxiosError,
+  AxiosHeaders,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 
 export interface ApiResponse<T = any> {
   data: T;
@@ -7,32 +13,36 @@ export interface ApiResponse<T = any> {
 }
 
 export type ApiRequest = {
-  [K in Lowercase<HttpMethod>]: <T>(url: string, params?: any, config?: AxiosRequestConfig) => Promise<T>;
+  [K in Lowercase<HttpMethod>]: <T>(
+    url: string,
+    params?: any,
+    config?: AxiosRequestConfig
+  ) => Promise<T>;
 };
 
-export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD";
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 const NEXT_PUBLIC_AUTH_HOST = process.env.NEXT_PUBLIC_AUTH_HOST;
 
-const apiWithoutBaseURLList = ["/logout"];
-const apiPrefixWithoutWorkspaceIdList = ["/identity"];
-const apiWithoutWorkspaceIdList = ["/workspace/workspaces", "/logout"];
+const apiWithoutBaseURLList = ['/logout'];
+const apiPrefixWithoutWorkspaceIdList = ['/identity'];
+const apiWithoutWorkspaceIdList = ['/workspace/workspaces', '/logout'];
 
-const baseURL = NEXT_PUBLIC_API_URL ? `${NEXT_PUBLIC_API_URL}/api` : "/api";
+const baseURL = NEXT_PUBLIC_API_URL ? `${NEXT_PUBLIC_API_URL}/api` : '/api';
 const timeout = 30000;
-const whiteList = ["/oauth2/token"];
-const timeoutWhiteList: string[] = [];
+const whiteList = ['/oauth2/token'];
+const timeoutWhiteList: string[] = ['/ai/assistant'];
 
 export const navigateToLogin = async () => {
-  console.info(111, NEXT_PUBLIC_AUTH_HOST, window.location.href);
+  const authUrl = new URL(
+    `${NEXT_PUBLIC_AUTH_HOST}/login?redirect_uri=${window.location.href}`
+  );
 
-  const authUrl = new URL(`${NEXT_PUBLIC_AUTH_HOST}/login?redirect_uri=${window.location.href}`);
   window.location.replace(authUrl.toString());
 };
-
 const getWorkspaceId = () => {
-  const value = localStorage.getItem("slate|workspace");
+  const value = localStorage.getItem('slate|workspace');
   let id: string | null = null;
   if (value) {
     try {
@@ -50,17 +60,17 @@ const createAxiosInstance = (): AxiosInstance => {
     baseURL,
     timeout,
     withCredentials: true,
-    xsrfCookieName: "XSRF-TOKEN",
-    xsrfHeaderName: "X-XSRF-TOKEN",
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
     withXSRFToken: true,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   });
 
   // request interceptors
   instance.interceptors.request.use(
-    (config) => {
+    config => {
       if (whiteList.includes(config.url!)) {
         return config;
       }
@@ -77,14 +87,14 @@ const createAxiosInstance = (): AxiosInstance => {
         };
       }
       if (
-        !apiPrefixWithoutWorkspaceIdList.some((api) => config.url?.indexOf(api) === 0) &&
-        !apiWithoutWorkspaceIdList.some((api) => config.url === api)
+        !apiPrefixWithoutWorkspaceIdList.some(api => config.url?.indexOf(api) === 0) &&
+        !apiWithoutWorkspaceIdList.some(api => config.url === api)
       ) {
         return {
           ...config,
           headers: new AxiosHeaders({
             ...config.headers,
-            "X-Workspace-Id": getWorkspaceId(),
+            // "X-Workspace-Id": getWorkspaceId(),
           }),
         };
       }
@@ -131,7 +141,7 @@ const createAxiosInstance = (): AxiosInstance => {
 const handle401 = (error: AxiosError) => {
   const { config } = error;
 
-  if (config?.headers?.get("X-Authorization-type") === "share") {
+  if (config?.headers?.get('X-Authorization-type') === 'share') {
     return Promise.reject(error);
   }
   navigateToLogin();
@@ -140,7 +150,12 @@ const handle401 = (error: AxiosError) => {
 const service = createAxiosInstance();
 
 // request handler
-const requestHandler = <T>(handlerParams: { method: HttpMethod; url: string; params?: any; config?: AxiosRequestConfig }): Promise<T> => {
+const requestHandler = <T>(handlerParams: {
+  method: HttpMethod;
+  url: string;
+  params?: any;
+  config?: AxiosRequestConfig;
+}): Promise<T> => {
   const { method, url, params = {}, config = {} } = handlerParams;
   const requestConfig: AxiosRequestConfig = {
     ...config,
@@ -148,7 +163,7 @@ const requestHandler = <T>(handlerParams: { method: HttpMethod; url: string; par
     url,
   };
 
-  if (["GET", "DELETE", "HEAD"].includes(method)) {
+  if (['GET', 'DELETE', 'HEAD'].includes(method)) {
     requestConfig.params = params;
   } else {
     requestConfig.data = params;
@@ -162,7 +177,7 @@ const requestHandler = <T>(handlerParams: { method: HttpMethod; url: string; par
 };
 
 // api request
-const ApiRequest: ApiRequest = ["get", "post", "put", "patch", "delete", "head"].reduce(
+const ApiRequest: ApiRequest = ['get', 'post', 'put', 'patch', 'delete', 'head'].reduce(
   (acc, method) => ({
     ...acc,
     [method]: <T>(url: string, params?: any, config?: AxiosRequestConfig) =>

@@ -1,44 +1,12 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Chat } from "@/components/chat";
-import { ChatMessage } from "@/types/chat";
-import {
-  mockMessageWithAttachmentsForAssistant,
-  mockMessageWithAttachmentsForUser,
-  mockMessageWithLongTextForAssistant,
-  mockMessageWithSheetForAssistant,
-  mockMessageWithSheetForUser,
-  mockMessageWithTableForAssistant,
-  mockMessageWithTableForUser,
-  mockMessageWithTextOnlyForAssistant,
-  mockMessageWithTextOnlyForUser,
-} from "./mock";
+import { Chat } from '@/components/chat';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ChatDetailPage() {
-  const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
-
-  useEffect(() => {
-    const isMock = false;
-    const mockMessages: ChatMessage[] = isMock
-      ? [
-          mockMessageWithTextOnlyForUser,
-          mockMessageWithTextOnlyForAssistant,
-          mockMessageWithTableForUser,
-          mockMessageWithTableForAssistant,
-          mockMessageWithAttachmentsForUser,
-          mockMessageWithAttachmentsForAssistant,
-          mockMessageWithLongTextForAssistant,
-          mockMessageWithSheetForUser,
-          mockMessageWithSheetForAssistant,
-        ]
-      : [];
-    setInitialMessages(mockMessages);
-  }, []);
-
   return (
     <div className="box-border flex h-0 w-full flex-1 flex-col">
-      <Chat initialMessages={initialMessages} />
+      <Chat chatId={uuidv4()} />
     </div>
   );
 }
