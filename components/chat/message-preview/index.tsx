@@ -81,23 +81,28 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
                   {data.city}, {data.state} - {data.zip}
                 </p>
               </div>
-              <span className="bg-muted px-2 py-1 rounded-md text-xs md:text-sm">
+              <span className="inline-block bg-muted px-2 py-1 rounded-md text-xs md:text-sm">
                 {data.classification}
               </span>
             </div>
           </CardContent>
-          <CardFooter className="px-4 md:px-6 py-3 border-t text-sm flex items-center">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted mr-2">
-              <Phone size="14" className="text-foreground" />
-            </div>
-            <div>
-              <a
-                href={`tel://${data.phoneNumber?.replace(/[^\d]/g, '')}`}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {data.phoneNumber}
-              </a>
-            </div>
+          <CardFooter className="px-4 md:px-6 py-3 border-t text-sm">
+            <a
+              href={`tel://${data.phoneNumber?.replace(/[^\d]/g, '')}`}
+              className="flex items-center w-full justify-between md:justify-start group hover:bg-muted/50 rounded-lg p-2 transition-colors"
+            >
+              <div className="flex items-center">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted mr-3">
+                  <Phone
+                    size="14"
+                    className="text-foreground group-hover:scale-110 transition-transform"
+                  />
+                </div>
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                  {data.phoneNumber}
+                </span>
+              </div>
+            </a>
           </CardFooter>
         </Card>
       );
