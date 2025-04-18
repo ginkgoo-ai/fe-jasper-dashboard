@@ -22,7 +22,7 @@ export function Chat({ chatId }: ChatProps) {
   const [requestController, setRequestController] = useState<{
     cancel: () => void;
   } | null>(null);
-  const [types, setTypes] = useState<string[]>([]);
+  const typesRef = useRef<string[]>([]);
   const messagesLogRef = useRef<ChatMessage[]>([]);
   const originalMessageLogRef = useRef<string>('');
 
@@ -50,7 +50,7 @@ export function Chat({ chatId }: ChatProps) {
 
     try {
       const { cancel, request } = await chat(
-        { chatId, message: multimodalValue, types },
+        { chatId, message: multimodalValue, types: typesRef.current },
         controller => {
           // 可以立即获取到 controller
           setRequestController({ cancel: () => controller.abort() });
@@ -136,10 +136,12 @@ export function Chat({ chatId }: ChatProps) {
   };
 
   const handleSubContractors = (mode: boolean) => {
+    const types = typesRef.current;
+
     if (mode) {
-      setTypes(prev => [...prev, 'CONTRACTORS_INFO']);
+      typesRef.current = [...types, 'CONTRACTORS_INFO'];
     } else {
-      setTypes(prev => prev.filter(type => type !== 'CONTRACTORS_INFO'));
+      typesRef.current = types.filter(type => type !== 'CONTRACTORS_INFO');
     }
   };
 

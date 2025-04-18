@@ -7,6 +7,7 @@ import { useUserStore } from '@/store';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 import './globals.css';
+import AccountInactive from './inactive';
 
 export default function RootLayout({
   children,
@@ -42,6 +43,10 @@ export default function RootLayout({
         {loading || !user ? (
           <div className="flex flex-1 h-auto items-center justify-center">
             <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
+          </div>
+        ) : user && !user.enabled ? (
+          <div className="flex flex-1 h-auto items-center justify-center">
+            <AccountInactive />
           </div>
         ) : (
           <ThemeProvider defaultTheme="system" storageKey="jasper|theme">
