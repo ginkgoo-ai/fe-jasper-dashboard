@@ -9,7 +9,7 @@ export enum ChatStatus {
 }
 
 export interface ChatMessagePart {
-  type: 'text' | 'sheet' | 'image';
+  type: 'text' | 'sheet' | 'image' | 'card';
   title?: string;
   content?: string;
 }
@@ -31,5 +31,6 @@ export interface ChatMessage {
 export type ChatParams = {
   message: string;
   chatId: string;
+  types?: string[];
   file?: File;
 };

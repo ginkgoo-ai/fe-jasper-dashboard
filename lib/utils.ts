@@ -15,6 +15,10 @@ const CONTENT_PATTERNS = {
     pattern: /(```image.*?```)/s,
     extract: (match: string) => match.match(/```image(.*?)```/s)?.[1] || '',
   },
+  card: {
+    pattern: /(```card.*?```)/s,
+    extract: (match: string) => match.match(/```card(.*?)```/s)?.[1] || '',
+  },
   // 可以继续添加其他类型的模式
 };
 

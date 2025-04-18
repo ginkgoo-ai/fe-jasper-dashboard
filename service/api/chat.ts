@@ -6,7 +6,7 @@ const ChatApi = {
 };
 
 const chat = async (
-  { chatId, message, file }: ChatParams,
+  { chatId, message, types, file }: ChatParams,
   onRequest?: (controller: AbortController) => void,
   onProgress?: (text: string) => void
 ): Promise<{ cancel: () => void; request: Promise<ChatParams> }> => {
@@ -16,6 +16,9 @@ const chat = async (
   formData.append('chatId', chatId);
   formData.append('message', message);
   file && formData.append('file', file);
+  types?.forEach(type => {
+    formData.append('types', type);
+  });
 
   // 在发起请求前调用钩子
   onRequest?.(controller);
@@ -42,10 +45,11 @@ const chat = async (
       for (const line of lines) {
         if (line.startsWith('data:')) {
           const data = line.split('data:')[1];
+
+          res += data;
           try {
-            onProgress?.((res += new String(data)));
+            onProgress?.(res);
           } catch (e) {
-            // 如果解析失败但不是空字符串，记录错误
             if (data && data !== '') {
               console.error('解析数据失败:', e, '原始数据:', data);
             }
