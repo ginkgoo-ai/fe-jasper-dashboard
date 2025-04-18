@@ -1,8 +1,7 @@
 import { ChatParams } from '@/types';
-import ApiRequest from '../axios';
 
 const ChatApi = {
-  chat: '/ai/assistant',
+  chat: '/api/ai/assistant',
 };
 
 const chat = async (
@@ -20,43 +19,65 @@ const chat = async (
     formData.append('types', type);
   });
 
-  // 在发起请求前调用钩子
   onRequest?.(controller);
 
-  let previousLength = 0;
   let res = '';
 
-  const request = ApiRequest.post<ChatParams>(ChatApi.chat, formData, {
-    headers: {
-      Accept: 'text/event-stream',
-      'Content-Type': 'multipart/form-data',
-    },
-    responseType: 'stream',
-    signal: controller.signal,
-    onDownloadProgress: (progressEvent: any) => {
-      const responseText = progressEvent.event.target.responseText;
+  const request = new Promise<ChatParams>((resolve, reject) => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}${ChatApi.chat}`, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal,
+      credentials: 'include',
+      headers: {
+        Accept: 'text/event-stream',
+      },
+    })
+      .then(response => {
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
 
-      // 只处理新增的部分
-      const newText = responseText.substring(previousLength);
-      previousLength = responseText.length;
+        function push() {
+          reader
+            ?.read()
+            .then(({ done, value }) => {
+              if (done) {
+                resolve({} as any);
+                return;
+              }
 
-      const lines = newText.split('\n');
+              const chunk = decoder.decode(value, { stream: true });
+              const lines = chunk.split('\n');
 
-      for (const line of lines) {
-        if (line.startsWith('data:')) {
-          const data = line.split('data:')[1];
+              for (const line of lines) {
+                if (line.startsWith('data:')) {
+                  const data = line.split('data:')[1];
 
-          res += data;
-          try {
-            onProgress?.(res);
-          } catch (e) {
-            if (data && data !== '') {
-              console.error('解析数据失败:', e, '原始数据:', data);
-            }
-          }
+                  if (data && data.trim()) {
+                    res += data;
+                    try {
+                      onProgress?.(res);
+                    } catch (e) {
+                      console.error('解析数据失败:', e, '原始数据:', data);
+                    }
+                  }
+                }
+              }
+
+              push();
+            })
+            .catch(error => {
+              if (error.name === 'AbortError') {
+                resolve({} as any);
+              } else {
+                reject(error);
+              }
+            });
         }
-      }
-    },
+
+        push();
+      })
+      .catch(reject);
   });
 
   return {

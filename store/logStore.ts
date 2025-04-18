@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { logger } from './middleware/logger';
 
 interface LogState {
-  logs: any[];
+  logs: any;
   addLog: (log: Omit<any, 'timestamp'>) => void;
   clearLogs: () => void;
 }
@@ -10,12 +10,12 @@ interface LogState {
 export const useLogStore = create<LogState>()(
   logger(
     set => ({
-      logs: [],
+      logs: {},
       addLog: log =>
-        set(state => ({
-          logs: [...state.logs, { ...log, timestamp: Date.now() }],
+        set(() => ({
+          logs: { ...log, timestamp: Date.now() },
         })),
-      clearLogs: () => set({ logs: [] }),
+      clearLogs: () => set({ logs: {} }),
     }),
     'logStoreLogger'
   )
