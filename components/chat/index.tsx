@@ -8,6 +8,7 @@ import { chat } from '@/service/api';
 import { useLogStore } from '@/store';
 import { ChatMessage, ChatMessageAttachment, ChatStatus } from '@/types/chat';
 import { useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 
 interface ChatProps {
   chatId: string;
@@ -21,6 +22,7 @@ export function Chat({ chatId }: ChatProps) {
   const [requestController, setRequestController] = useState<{
     cancel: () => void;
   } | null>(null);
+  const [types, setTypes] = useState<string[]>([]);
   const messagesLogRef = useRef<ChatMessage[]>([]);
   const originalMessageLogRef = useRef<string>('');
 
@@ -48,7 +50,7 @@ export function Chat({ chatId }: ChatProps) {
 
     try {
       const { cancel, request } = await chat(
-        { chatId, message: multimodalValue },
+        { chatId, message: multimodalValue, types },
         controller => {
           // 可以立即获取到 controller
           setRequestController({ cancel: () => controller.abort() });
@@ -59,28 +61,30 @@ export function Chat({ chatId }: ChatProps) {
           setStatus(ChatStatus.STREAMING);
           originalMessageLogRef.current = res;
 
-          setMessages(prevMessages => {
-            if (prevMessages.find(msg => msg.id === assistantMessageId)) {
-              const _newMessages = prevMessages.map(msg =>
-                msg.id === assistantMessageId ? { ...msg, parts } : msg
-              );
-              messagesLogRef.current = _newMessages;
+          flushSync(() =>
+            setMessages(prevMessages => {
+              if (prevMessages.find(msg => msg.id === assistantMessageId)) {
+                const _newMessages = prevMessages.map(msg =>
+                  msg.id === assistantMessageId ? { ...msg, parts } : msg
+                );
+                messagesLogRef.current = _newMessages;
 
-              return _newMessages;
-            } else {
-              const _newMessages = [
-                ...prevMessages,
-                {
-                  ...DefaultMessage.common,
-                  id: assistantMessageId,
-                  parts,
-                },
-              ];
+                return _newMessages;
+              } else {
+                const _newMessages = [
+                  ...prevMessages,
+                  {
+                    ...DefaultMessage.common,
+                    id: assistantMessageId,
+                    parts,
+                  },
+                ];
 
-              messagesLogRef.current = _newMessages;
-              return _newMessages;
-            }
-          });
+                messagesLogRef.current = _newMessages;
+                return _newMessages;
+              }
+            })
+          );
         }
       );
 
@@ -131,6 +135,14 @@ export function Chat({ chatId }: ChatProps) {
     setAttachments(attachments);
   };
 
+  const handleSubContractors = (mode: boolean) => {
+    if (mode) {
+      setTypes(prev => [...prev, 'CONTRACTORS_INFO']);
+    } else {
+      setTypes(prev => prev.filter(type => type !== 'CONTRACTORS_INFO'));
+    }
+  };
+
   return (
     <div className="bg-background flex h-full w-full flex-col overflow-hidden">
       {/* Message List */}
@@ -147,6 +159,7 @@ export function Chat({ chatId }: ChatProps) {
           onSubmit={handleMultimodalSubmit}
           onStop={handleMultimodalStop}
           onAttachmentsChange={handleAttachmentsChange}
+          onSubContractors={handleSubContractors}
         />
       </form>
     </div>

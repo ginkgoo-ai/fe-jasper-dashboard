@@ -31,6 +31,7 @@ interface InputMultimodalProps {
   onStop: () => void;
   // 附件
   onAttachmentsChange: (attachments: Array<ChatMessageAttachment>) => void;
+  onSubContractors?: (mode: boolean) => void;
 }
 
 function PureInputMultimodal(props: InputMultimodalProps) {
@@ -43,6 +44,7 @@ function PureInputMultimodal(props: InputMultimodalProps) {
     onSubmit,
     onStop,
     onAttachmentsChange,
+    onSubContractors,
   } = props;
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -157,8 +159,8 @@ function PureInputMultimodal(props: InputMultimodalProps) {
     [attachments, onAttachmentsChange]
   );
 
-  const handleOnSearchToggle = useCallback((mode: boolean) => {
-    console.log(mode);
+  const handleSubContractors = useCallback((mode: boolean) => {
+    onSubContractors?.(mode);
   }, []);
 
   return (
@@ -234,7 +236,7 @@ function PureInputMultimodal(props: InputMultimodalProps) {
       </div> */}
 
       <div className="absolute bottom-0 left-0 p-2">
-        <ButtonSearchToggle onToggle={handleOnSearchToggle} />
+        <ButtonSearchToggle onToggle={handleSubContractors} />
       </div>
 
       <div className="absolute bottom-0 right-0 flex w-fit flex-row justify-end p-2">

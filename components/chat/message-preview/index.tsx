@@ -5,12 +5,19 @@ import { PreviewAttachment } from '@/components/chat/preview-attachment';
 import { DocumentHeader } from '@/components/chat/preview-header';
 import { SheetEditor } from '@/components/chat/sheet-editor';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { useUserStore } from '@/store';
 import { ChatMessage, ChatMessagePart } from '@/types/chat';
 import equal from 'fast-deep-equal';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bot } from 'lucide-react';
+import { Bot, Phone } from 'lucide-react';
 import Image from 'next/image';
 import { memo } from 'react';
 
@@ -25,7 +32,8 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
   const defaultAvatar = '/default.png';
 
   const renderMessagePartText = (part: ChatMessagePart) => {
-    return <Markdown>{part.content || ''}</Markdown>;
+    const formattedContent = (part.content || '').replace(/\n/g, '  \n');
+    return <Markdown>{formattedContent}</Markdown>;
   };
 
   const renderMessagePartSheet = (part: ChatMessagePart) => {
@@ -46,6 +54,54 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
     return (
       <Image src={part.content || ''} alt={part.title || ''} width={300} height={200} />
     );
+  };
+
+  const renderMessagePartCard = (part: ChatMessagePart) => {
+    const contents = part.content as unknown as Record<string, string>[];
+
+    return contents.map((data: any) => {
+      return (
+        <Card
+          key={data.businessName}
+          className="my-2 w-full hover:shadow-md transition-shadow"
+        >
+          <CardHeader className="space-y-2 px-4 py-3 md:px-6 md:py-4 flex flex-col md:flex-row md:justify-between md:items-center">
+            <CardTitle className="text-base md:text-lg font-semibold mr-4">
+              {data.businessName}
+            </CardTitle>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground ">
+              <span>Lic# {data.licenseNumber}</span>
+            </div>
+          </CardHeader>
+          <CardContent className="px-4 md:px-6 text-sm text-muted-foreground">
+            <div className="space-y-2">
+              <div className="flex flex-col gap-2">
+                <p className="text-muted-foreground">{data.address}</p>
+                <p className="text-muted-foreground">
+                  {data.city}, {data.state} - {data.zip}
+                </p>
+              </div>
+              <span className="bg-muted px-2 py-1 rounded-md text-xs md:text-sm">
+                {data.classification}
+              </span>
+            </div>
+          </CardContent>
+          <CardFooter className="px-4 md:px-6 py-3 border-t text-sm flex items-center">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted mr-2">
+              <Phone size="14" className="text-foreground" />
+            </div>
+            <div>
+              <a
+                href={`tel://${data.phoneNumber?.replace(/[^\d]/g, '')}`}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {data.phoneNumber}
+              </a>
+            </div>
+          </CardFooter>
+        </Card>
+      );
+    });
   };
 
   return (
@@ -117,13 +173,20 @@ const PurePreviewMessage = (props: MessagePreviewProps) => {
                         message.role !== 'user',
                     })}
                   >
-                    {
-                      {
-                        text: renderMessagePartText(part),
-                        sheet: renderMessagePartSheet(part),
-                        image: renderMessagePartImage(part),
-                      }[type]
-                    }
+                    {(() => {
+                      switch (type) {
+                        case 'text':
+                          return renderMessagePartText(part);
+                        case 'sheet':
+                          return renderMessagePartSheet(part);
+                        case 'image':
+                          return renderMessagePartImage(part);
+                        case 'card':
+                          return renderMessagePartCard(part);
+                        default:
+                          return null;
+                      }
+                    })()}
                   </div>
                 </div>
               );
