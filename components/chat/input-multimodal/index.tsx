@@ -13,7 +13,7 @@ import { PreviewAttachment } from '@/components/chat/preview-attachment';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { ChatMessageAttachment, ChatStatus } from '@/types/chat';
-import { ButtonSearchToggle } from '../button-search-toogle';
+import { ButtonSearchToggle } from '../button-search-toggle';
 
 interface InputMultimodalProps {
   value: string;
@@ -233,7 +233,7 @@ function PureInputMultimodal(props: InputMultimodalProps) {
         <ButtonAttachments fileInputRef={fileInputRef} status={status} />
       </div> */}
 
-      <div className="absolute bottom-1 left-1">
+      <div className="absolute bottom-0 left-0 p-2">
         <ButtonSearchToggle onToggle={handleOnSearchToggle} />
       </div>
 

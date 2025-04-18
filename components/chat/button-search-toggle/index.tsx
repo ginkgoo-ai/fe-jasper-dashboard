@@ -12,14 +12,14 @@ function PureButtonSearchToggle(props: ButtonSearchToggleProps) {
   return (
     <Toggle
       data-testid="search-button"
-      className="h-fit rounded-full border p-2 dark:border-zinc-600 data-[state=on]:bg-sky-300/30 data-[state=on]:text-blue-500 data-[state=on]:border-transparent dark:data-[state=on]:border-transparent dark:data-[state=on]:bg-blue-500/20 dark:data-[state=on]:text-blue-500 text-sm"
+      className="h-fit rounded-full border p-2 cursor-pointer dark:border-zinc-600 bg-muted text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-background data-[state=on]:bg-sky-300/30 data-[state=on]:text-blue-500 data-[state=on]:border-transparent dark:data-[state=on]:border-transparent dark:data-[state=on]:bg-blue-500/20 dark:data-[state=on]:text-blue-500 text-sm"
       onPressedChange={state => {
         onToggle?.(state);
       }}
       disabled={disabled}
     >
       <Search size={14} />
-      <span>Search for subcontractors</span>
+      <span className="hidden lg:inline">Search for subcontractors</span>
     </Toggle>
   );
 }
