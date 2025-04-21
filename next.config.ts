@@ -1,17 +1,17 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
-const isDevelopment = process.env.NODE_ENV === "development";
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const nextConfig: NextConfig = {
-  ...(isDevelopment && { hostname: "local.jasper.dev" }),
+  ...(isDevelopment && { hostname: 'local.jasper.dev' }),
   experimental: {
     routerBFCache: false,
   },
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
-        destination: "https://api-jasper.ginkgoo.dev/api/:path*",
+        source: '/api/:path*',
+        destination: 'https://api-jasper.ginkgoo.dev/api/:path*',
       },
     ];
   },

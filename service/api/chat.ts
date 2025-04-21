@@ -34,6 +34,11 @@ const chat = async (
       },
     })
       .then(response => {
+        if (response.status === 403) {
+          window.location.replace('/403');
+          return;
+        }
+
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
 

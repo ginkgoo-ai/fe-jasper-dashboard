@@ -118,7 +118,7 @@ const createAxiosInstance = (): AxiosInstance => {
             handle401(error);
             break;
           case 403:
-            // TODO: forbidden
+            window.location.replace('/403');
             break;
           case 404:
             // TODO: not found
