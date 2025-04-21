@@ -1,24 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import useRequest from '@/hooks/useRequest';
-import { getUserInfo, logout } from '@/service/api';
+import { logout } from '@/service/api';
 import { AlertCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 export default function Forbidden() {
-  const router = useRouter();
-
-  useRequest(getUserInfo, {
-    errorRetryCount: 1,
-    immediate: true,
-    onSuccess: user => {
-      if (user.enabled) {
-        router.replace('/');
-      }
-    },
-  });
-
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-background to-muted/20 px-4 py-16 flex items-center justify-center">
       <div className="w-full max-w-lg space-y-8 text-center">
@@ -50,10 +36,10 @@ export default function Forbidden() {
             <Button
               variant="outline"
               size="lg"
-              onClick={() => router.replace('/')}
+              onClick={() => window.location.reload()}
               className="cursor-pointer hover:bg-accent transition-colors"
             >
-              Return Home
+              Refresh Page
             </Button>
 
             <Button
