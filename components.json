@@ -5,7 +5,7 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "app/globals.css",
+    "css": "style/global.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
@@ -17,7 +17,9 @@
     "lib": "@/lib",
     "hooks": "@/hooks",
     "types": "@/types",
-    "service": "@/service"
+    "service": "@/service",
+    "store": "@/store",
+    "assets": "@/assets"
   },
   "iconLibrary": "lucide"
 }

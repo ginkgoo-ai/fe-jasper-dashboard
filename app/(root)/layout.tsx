@@ -4,10 +4,10 @@ import Header from '@/components/header';
 import useRequest from '@/hooks/useRequest';
 import { getUserInfo } from '@/service/api';
 import { useUserStore } from '@/store';
+import '@/style/global.css';
 import { ThemeProvider } from 'next-themes';
+import { useRouter } from 'next/navigation';
 import { Toaster } from 'sonner';
-import './globals.css';
-import AccountInactive from './inactive';
 
 export default function RootLayout({
   children,
@@ -15,12 +15,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { setUserInfo } = useUserStore();
+  const router = useRouter();
 
   const { loading, data: user } = useRequest(getUserInfo, {
     errorRetryCount: 1,
     immediate: true,
     onSuccess: user => {
       setUserInfo(user);
+
+      if (!user.enabled) {
+        router.replace('/403');
+      }
     },
   });
 
@@ -40,13 +45,9 @@ export default function RootLayout({
       </head>
 
       <body className="flex h-[100vh] w-[100vw] flex-col">
-        {loading || !user ? (
+        {loading || !user || (user && !user.enabled) ? (
           <div className="flex flex-1 h-auto items-center justify-center">
             <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
-          </div>
-        ) : user && !user.enabled ? (
-          <div className="flex flex-1 h-auto items-center justify-center">
-            <AccountInactive />
           </div>
         ) : (
           <ThemeProvider defaultTheme="system" storageKey="jasper|theme">
