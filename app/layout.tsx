@@ -1,10 +1,12 @@
 'use client';
 
 import useRequest from '@/hooks/useRequest';
+import Tracer from '@/lib/telemetry/tracer';
 import { getUserInfo } from '@/service/api';
 import { useUserStore } from '@/store';
 import '@/style/global.css';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function RootLayout({
   children,
@@ -29,6 +31,16 @@ export default function RootLayout({
       }
     },
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      Tracer({
+        url: process.env.NEXT_PUBLIC_OTEL_EXPORTER_OTLP_ENDPOINT as string,
+        serviceName: process.env.NEXT_PUBLIC_OTEL_SERVICE_NAME as string,
+        attributes: process.env.NEXT_PUBLIC_OTEL_RESOURCE_ATTRIBUTES as string,
+      });
+    }
+  }, []);
 
   return (
     <html suppressHydrationWarning lang="en">
